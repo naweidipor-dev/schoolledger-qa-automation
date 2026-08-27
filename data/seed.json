@@ -1,0 +1,23 @@
+{
+  "students": [
+    {"id":"stu-1001","firstName":"Ayesha","lastName":"Khan","email":"ayesha.guardian@example.test","grade":"Grade 7","guardianName":"Farah Khan","status":"active","createdAt":"2026-08-01T09:00:00.000Z"},
+    {"id":"stu-1002","firstName":"Bilal","lastName":"Ahmed","email":"bilal.guardian@example.test","grade":"Grade 9","guardianName":"Saad Ahmed","status":"active","createdAt":"2026-08-02T09:00:00.000Z"},
+    {"id":"stu-1003","firstName":"Mariam","lastName":"Ali","email":"mariam.guardian@example.test","grade":"Grade 5","guardianName":"Hina Ali","status":"active","createdAt":"2026-08-03T09:00:00.000Z"},
+    {"id":"stu-1004","firstName":"Hamza","lastName":"Raza","email":"hamza.guardian@example.test","grade":"Grade 10","guardianName":"Omar Raza","status":"inactive","createdAt":"2026-08-04T09:00:00.000Z"},
+    {"id":"stu-1005","firstName":"Sofia","lastName":"Malik","email":"sofia.guardian@example.test","grade":"Grade 3","guardianName":"Nadia Malik","status":"active","createdAt":"2026-08-05T09:00:00.000Z"}
+  ],
+  "invoices": [
+    {"id":"inv-2001","studentId":"stu-1001","description":"Autumn tuition","amountCents":85000,"paidCents":85000,"dueDate":"2026-08-15","status":"paid","createdAt":"2026-08-01T10:00:00.000Z"},
+    {"id":"inv-2002","studentId":"stu-1002","description":"Autumn tuition","amountCents":95000,"paidCents":50000,"dueDate":"2026-08-18","status":"partial","createdAt":"2026-08-02T10:00:00.000Z"},
+    {"id":"inv-2003","studentId":"stu-1003","description":"Transport fee","amountCents":30000,"paidCents":0,"dueDate":"2026-08-10","status":"overdue","createdAt":"2026-08-03T10:00:00.000Z"},
+    {"id":"inv-2004","studentId":"stu-1005","description":"Activity fee","amountCents":18000,"paidCents":0,"dueDate":"2026-09-10","status":"open","createdAt":"2026-08-05T10:00:00.000Z"}
+  ],
+  "payments": [
+    {"id":"pay-3001","invoiceId":"inv-2001","amountCents":85000,"method":"card","reference":"CARD-10001","status":"completed","createdAt":"2026-08-06T12:00:00.000Z"},
+    {"id":"pay-3002","invoiceId":"inv-2002","amountCents":50000,"method":"bank_transfer","reference":"BANK-10002","status":"completed","createdAt":"2026-08-07T12:00:00.000Z"}
+  ],
+  "refunds": [],
+  "audit": [
+    {"id":"audit-1","actor":"system","action":"SEED_CREATED","entity":"database","entityId":"seed","details":"Training data loaded","createdAt":"2026-08-01T08:00:00.000Z"}
+  ]
+}

@@ -1,0 +1,2146 @@
+{
+  "info": {
+    "_postman_id": "2cbb910f-9bde-4fad-a481-c70a2e19b605",
+    "name": "API Testing Practice",
+    "description": "### Welcome to Postman! This is your first collection. \n\nCollections are your starting point for building and testing APIs. You can use this one to:\n\n• Group related requests\n• Test your API in real-world scenarios\n• Document and share your requests\n\nUpdate the name and overview whenever you’re ready to make it yours.\n\n[Learn more about Postman Collections.](https://learning.postman.com/docs/collections/collections-overview/)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "57384748",
+    "_collection_link": "https://go.postman.co/collection/57384748-2cbb910f-9bde-4fad-a481-c70a2e19b605?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "SchoolLedger Automated Regression",
+      "item": [
+        {
+          "name": "API-HEALTH-000 – Automated health check",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\r\n\r\npm.test(\"Status code is 200\", function () {\r\n  pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"API status is ok\", function () {\r\n  pm.expect(response.status).to.eql(\"ok\");\r\n});\r\n\r\npm.test(\"Correct service name is returned\", function () {\r\n  pm.expect(response.service).to.eql(\"school-ledger-api\");\r\n});\r\n\r\npm.test(\"Response time is below 500 ms\", function () {\r\n  pm.expect(pm.response.responseTime).to.be.below(500);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://127.0.0.1:4173/api/health",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "4173",
+              "path": [
+                "api",
+                "health"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "API-LOGIN-001 – Valid admin login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\r\n\r\npm.test(\"Login returns 200\", function () {\r\n  pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Token is returned\", function () {\r\n  pm.expect(response.token).to.be.a(\"string\").and.not.empty;\r\n});\r\n\r\npm.environment.set(\"token\", response.token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"username\": \"qa.admin\",\r\n  \"password\": \"Admin123!\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:4173/api/auth/login",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "4173",
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "API-LOGIN-002 – Automated invalid login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\r\n\r\npm.test(\"Invalid login returns 401\", function () {\r\n  pm.response.to.have.status(401);\r\n});\r\n\r\npm.test(\"Error code is INVALID_CREDENTIALS\", function () {\r\n  pm.expect(response.error.code).to.eql(\"INVALID_CREDENTIALS\");\r\n});\r\n\r\npm.test(\"No token is returned\", function () {\r\n  pm.expect(response.token).to.be.undefined;\r\n});\r\n\r\npm.test(\"Response time is below 500 ms\", function () {\r\n  pm.expect(pm.response.responseTime).to.be.below(500);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"username\": \"qa.admin\",\r\n  \"password\": \"WrongPassword\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "API-AUTH-003 – Automated missing token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\r\n\r\npm.test(\"Missing token returns 401\", function () {\r\n  pm.response.to.have.status(401);\r\n});\r\n\r\npm.test(\"Error code is UNAUTHENTICATED\", function () {\r\n  pm.expect(response.error.code).to.eql(\"UNAUTHENTICATED\");\r\n});\r\n\r\npm.test(\"No student data is returned\", function () {\r\n  pm.expect(response.students).to.be.undefined;\r\n});\r\n\r\npm.test(\"Response time is below 500 ms\", function () {\r\n  pm.expect(pm.response.responseTime).to.be.below(500);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/students",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "students"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "API-AUTH-004 – Automated valid token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\r\n\r\npm.test(\"Valid token returns 200\", function () {\r\n  pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Students is an array\", function () {\r\n  pm.expect(response.students).to.be.an(\"array\");\r\n});\r\n\r\npm.test(\"At least one student is returned\", function () {\r\n  pm.expect(response.students.length).to.be.above(0);\r\n});\r\n\r\npm.test(\"Student contract contains required fields\", function () {\r\n  const student = response.students[0];\r\n\r\n  pm.expect(student).to.have.property(\"id\");\r\n  pm.expect(student).to.have.property(\"firstName\");\r\n  pm.expect(student).to.have.property(\"lastName\");\r\n  pm.expect(student).to.have.property(\"email\");\r\n  pm.expect(student).to.have.property(\"status\");\r\n});\r\n\r\npm.test(\"Response time is below 500 ms\", function () {\r\n  pm.expect(pm.response.responseTime).to.be.below(500);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/students",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "students"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "API-STUDENT-005 – Automated missing fields",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\r\n\r\npm.test(\"Missing fields return 422\", function () {\r\n  pm.response.to.have.status(422);\r\n});\r\n\r\npm.test(\"Error code is VALIDATION_ERROR\", function () {\r\n  pm.expect(response.error.code).to.eql(\"VALIDATION_ERROR\");\r\n});\r\n\r\npm.test(\"All required-field errors are returned\", function () {\r\n  const fields = response.error.fields;\r\n\r\n  pm.expect(fields).to.have.property(\"firstName\");\r\n  pm.expect(fields).to.have.property(\"lastName\");\r\n  pm.expect(fields).to.have.property(\"email\");\r\n  pm.expect(fields).to.have.property(\"grade\");\r\n  pm.expect(fields).to.have.property(\"guardianName\");\r\n});\r\n\r\npm.test(\"No student is returned\", function () {\r\n  pm.expect(response.student).to.be.undefined;\r\n});\r\n\r\npm.test(\"Response time is below 500 ms\", function () {\r\n  pm.expect(pm.response.responseTime).to.be.below(500);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/students",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "students"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "API-STUDENT-006 – Automated valid student",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\r\n\r\npm.test(\"Valid student returns 201\", function () {\r\n  pm.response.to.have.status(201);\r\n});\r\n\r\npm.test(\"Student ID is returned\", function () {\r\n  pm.expect(response.student.id).to.be.a(\"string\").and.not.empty;\r\n});\r\n\r\npm.test(\"Student data is correct\", function () {\r\n  pm.expect(response.student.firstName).to.eql(\"Automated\");\r\n  pm.expect(response.student.lastName).to.eql(\"Student\");\r\n  pm.expect(response.student.grade).to.eql(\"Grade 8\");\r\n  pm.expect(response.student.status).to.eql(\"active\");\r\n});\r\n\r\npm.test(\"Email has the expected domain\", function () {\r\n  pm.expect(response.student.email).to.match(/@example\\.test$/);\r\n});\r\n\r\npm.test(\"Response time is below 500 ms\", function () {\r\n  pm.expect(pm.response.responseTime).to.be.below(500);\r\n});\r\n\r\npm.environment.set(\"student_id\", response.student.id);\r\npm.environment.set(\"student_email\", response.student.email);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"firstName\": \"Automated\",\r\n  \"lastName\": \"Student\",\r\n  \"email\": \"auto.student.{{$timestamp}}@example.test\",\r\n  \"grade\": \"Grade 8\",\r\n  \"guardianName\": \"Automation Guardian\",\r\n  \"status\": \"active\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/students",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "students"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "API-STUDENT-007 – Automated duplicate email",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\r\n\r\npm.test(\"Duplicate email returns 409\", function () {\r\n  pm.response.to.have.status(409);\r\n});\r\n\r\npm.test(\"Error code is DUPLICATE_EMAIL\", function () {\r\n  pm.expect(response.error.code).to.eql(\"DUPLICATE_EMAIL\");\r\n});\r\n\r\npm.test(\"Email field error is returned\", function () {\r\n  pm.expect(response.error.fields).to.have.property(\"email\");\r\n});\r\n\r\npm.test(\"No student is returned\", function () {\r\n  pm.expect(response.student).to.be.undefined;\r\n});\r\n\r\npm.test(\"Response time is below 500 ms\", function () {\r\n  pm.expect(pm.response.responseTime).to.be.below(500);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"firstName\": \"Duplicate\",\r\n  \"lastName\": \"Student\",\r\n  \"email\": \"{{student_email}}\",\r\n  \"grade\": \"Grade 8\",\r\n  \"guardianName\": \"Automation Guardian\",\r\n  \"status\": \"active\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/students",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "students"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "API-STUDENT-008 – Automated invalid email",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\r\n\r\npm.test(\"Invalid email returns 422\", function () {\r\n    pm.response.to.have.status(422);\r\n});\r\n\r\npm.test(\"Validation error is returned\", function () {\r\n    pm.expect(response.error.code).to.eql(\"VALIDATION_ERROR\");\r\n});\r\n\r\npm.test(\"Email validation message is returned\", function () {\r\n    pm.expect(response.error.fields.email).to.exist;\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"firstName\": \"Invalid\",\r\n  \"lastName\": \"Email\",\r\n  \"email\": \"not-a-valid-email\",\r\n  \"grade\": \"Grade 8\",\r\n  \"guardianName\": \"QA Guardian\",\r\n  \"status\": \"active\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:4173/api/students",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "4173",
+              "path": [
+                "api",
+                "students"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "API-INVOICE-009 – Automated valid invoice",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\r\n\r\npm.test(\"Valid invoice returns 201\", function () {\r\n  pm.response.to.have.status(201);\r\n});\r\n\r\npm.test(\"Invoice ID is returned\", function () {\r\n  pm.expect(response.invoice.id).to.be.a(\"string\").and.not.empty;\r\n});\r\n\r\npm.test(\"Invoice starts open and unpaid\", function () {\r\n  pm.expect(response.invoice.status).to.eql(\"open\");\r\n  pm.expect(response.invoice.paidCents).to.eql(0);\r\n});\r\n\r\npm.test(\"Invoice amounts are correct\", function () {\r\n  pm.expect(response.invoice.amountCents).to.eql(50000);\r\n  pm.expect(response.invoice.outstandingCents).to.eql(50000);\r\n});\r\n\r\npm.test(\"Response time is below 500 ms\", function () {\r\n  pm.expect(pm.response.responseTime).to.be.below(500);\r\n});\r\n\r\npm.environment.set(\"invoice_id\", response.invoice.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"studentId\": \"{{student_id}}\",\r\n  \"description\": \"Automated tuition invoice\",\r\n  \"amount\": 500,\r\n  \"dueDate\": \"2026-09-30\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/invoices",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "invoices"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "API-PAYMENT-010 – Automated partial payment",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\r\n\r\npm.test(\"Partial payment returns 201\", function () {\r\n  pm.response.to.have.status(201);\r\n});\r\n\r\npm.test(\"Payment ID is returned\", function () {\r\n  pm.expect(response.payment.id).to.be.a(\"string\").and.not.empty;\r\n});\r\n\r\npm.test(\"Payment amount is £200\", function () {\r\n  pm.expect(response.payment.amountCents).to.eql(20000);\r\n});\r\n\r\npm.test(\"Invoice becomes partial\", function () {\r\n  pm.expect(response.invoice.status).to.eql(\"partial\");\r\n  pm.expect(response.invoice.paidCents).to.eql(20000);\r\n  pm.expect(response.invoice.outstandingCents).to.eql(30000);\r\n});\r\n\r\npm.test(\"Response time is below 500 ms\", function () {\r\n  pm.expect(pm.response.responseTime).to.be.below(500);\r\n});\r\n\r\npm.environment.set(\"payment_id\", response.payment.id);\r\npm.environment.set(\"payment_reference\", response.payment.reference);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"invoiceId\": \"{{invoice_id}}\",\r\n    \"amount\": 200,\r\n    \"method\": \"card\",\r\n    \"reference\": \"AUTO-PARTIAL-{{$timestamp}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/payments",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "payments"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "API-PAYMENT-011 – Automated complete payment",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\r\n\r\npm.test(\"Complete payment returns 201\", function () {\r\n    pm.response.to.have.status(201);\r\n});\r\n\r\npm.test(\"Payment ID is returned\", function () {\r\n    pm.expect(response.payment.id).to.be.a(\"string\").and.not.empty;\r\n});\r\n\r\npm.test(\"Payment amount is 10000 cents\", function () {\r\n    pm.expect(response.payment.amountCents).to.eql(30000);\r\n});\r\n\r\npm.test(\"Invoice status becomes paid\", function () {\r\n    pm.expect(response.invoice.status).to.eql(\"paid\");\r\n});\r\n\r\npm.test(\"Outstanding balance becomes zero\", function () {\r\n    pm.expect(response.invoice.outstandingCents).to.eql(0);\r\n});\r\n\r\npm.environment.set(\"full_payment_id\", response.payment.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"invoiceId\": \"{{invoice_id}}\",\r\n  \"amount\": 300,\r\n  \"method\": \"bank_transfer\",\r\n  \"reference\": \"AUTO-FULL-{{$timestamp}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:4173/api/payments",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "4173",
+              "path": [
+                "api",
+                "payments"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "API-PAYMENT-012 – Automated paid-invoice rejection",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\r\n\r\npm.test(\"Payment against paid invoice returns 422\", function () {\r\n    pm.response.to.have.status(422);\r\n});\r\n\r\npm.test(\"Validation error is returned\", function () {\r\n    pm.expect(response.error.code).to.eql(\"VALIDATION_ERROR\");\r\n});\r\n\r\npm.test(\"Amount error is returned\", function () {\r\n    pm.expect(response.error.fields.amount).to.exist;\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"invoiceId\": \"{{invoice_id}}\",\r\n  \"amount\": 10,\r\n  \"method\": \"cash\",\r\n  \"reference\": \"AUTO-PAID-{{$timestamp}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:4173/api/payments",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "4173",
+              "path": [
+                "api",
+                "payments"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "API-PAYMENT-013 – Automated duplicate reference",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\r\n\r\npm.test(\"Duplicate reference returns 409\", function () {\r\n    pm.response.to.have.status(409);\r\n});\r\n\r\npm.test(\"Duplicate reference error is returned\", function () {\r\n    pm.expect(response.error.code).to.eql(\"DUPLICATE_REFERENCE\");\r\n});\r\n\r\npm.test(\"Reference field error is returned\", function () {\r\n    pm.expect(response.error.fields.reference).to.exist;\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"invoiceId\": \"inv-2004\",\r\n  \"amount\": 1,\r\n  \"method\": \"card\",\r\n  \"reference\": \"{{payment_reference}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:4173/api/payments",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "4173",
+              "path": [
+                "api",
+                "payments"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "API-REFUND-014 – Automated partial refund",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\r\n\r\npm.test(\"Partial refund returns 201\", function () {\r\n    pm.response.to.have.status(201);\r\n});\r\n\r\npm.test(\"Refund ID is returned\", function () {\r\n    pm.expect(response.refund.id).to.be.a(\"string\").and.not.empty;\r\n});\r\n\r\npm.test(\"Refund amount is 5000 cents\", function () {\r\n    pm.expect(response.refund.amountCents).to.eql(5000);\r\n});\r\n\r\npm.test(\"Invoice becomes partial\", function () {\r\n    pm.expect(response.invoice.status).to.eql(\"partial\");\r\n});\r\n\r\npm.test(\"Outstanding balance is 5000 cents\", function () {\r\n    pm.expect(response.invoice.outstandingCents).to.eql(5000);\r\n});\r\n\r\npm.environment.set(\"refund_id\", response.refund.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"paymentId\": \"{{payment_id}}\",\r\n  \"amount\": 50,\r\n  \"reason\": \"Automated partial refund test\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:4173/api/refunds",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "4173",
+              "path": [
+                "api",
+                "refunds"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "API-REFUND-015 – Automated excessive refund",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\r\n\r\npm.test(\"Excessive refund returns 422\", function () {\r\n  pm.response.to.have.status(422);\r\n});\r\n\r\npm.test(\"Error code is VALIDATION_ERROR\", function () {\r\n  pm.expect(response.error.code).to.eql(\"VALIDATION_ERROR\");\r\n});\r\n\r\npm.test(\"Amount field error is returned\", function () {\r\n  pm.expect(response.error.fields).to.have.property(\"amount\");\r\n});\r\n\r\npm.test(\"No refund is returned\", function () {\r\n  pm.expect(response.refund).to.be.undefined;\r\n});\r\n\r\npm.test(\"Response time is below 500 ms\", function () {\r\n  pm.expect(pm.response.responseTime).to.be.below(500);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"paymentId\": \"{{payment_id}}\",\r\n  \"amount\": 151,\r\n  \"reason\": \"Automated refund-limit validation test\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/refunds",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "refunds"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "API-LOGIN-VIEWER – Generate viewer token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\r\n\r\npm.test(\"Viewer login returns 200\", function () {\r\n  pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Viewer role is returned\", function () {\r\n  pm.expect(response.user.role).to.eql(\"viewer\");\r\n});\r\n\r\npm.environment.set(\"viewer_token\", response.token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"username\": \"viewer\",\r\n  \"password\": \"Viewer123!\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "API-RBAC-016 – Automated Viewer restriction",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\r\n\r\npm.test(\"Viewer create attempt returns 403\", function () {\r\n  pm.response.to.have.status(403);\r\n});\r\n\r\npm.test(\"Error code is FORBIDDEN\", function () {\r\n  pm.expect(response.error.code).to.eql(\"FORBIDDEN\");\r\n});\r\n\r\npm.test(\"Viewer restriction message is returned\", function () {\r\n    pm.expect(response.error.message.toLowerCase()).to.include(\"viewer\");\r\n});\r\n\r\npm.test(\"No student is returned\", function () {\r\n  pm.expect(response.student).to.be.undefined;\r\n});\r\n\r\npm.test(\"Response time is below 500 ms\", function () {\r\n  pm.expect(pm.response.responseTime).to.be.below(500);\r\n});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{viewer_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "pm.test(\"Viewer restriction message is returned\", function () {\r\n    pm.expect(response.error.message.toLowerCase()).to.include(\"viewer\");\r\n});",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/students",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "students"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Get All posts ",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://jsonplaceholder.typicode.com/posts",
+          "protocol": "https",
+          "host": [
+            "jsonplaceholder",
+            "typicode",
+            "com"
+          ],
+          "path": [
+            "posts"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Post by ID",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Post ID matches environment postId\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "    const expectedPostId = Number(pm.environment.get(\"postId\"));\r",
+              "\r",
+              "    pm.expect(jsonData.id).to.eql(expectedPostId);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Title exists\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "\r",
+              "    pm.expect(jsonData.title).to.exist;\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response fields have correct data types\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "\r",
+              "    pm.expect(jsonData.userId).to.be.a(\"number\");\r",
+              "    pm.expect(jsonData.id).to.be.a(\"number\");\r",
+              "    pm.expect(jsonData.title).to.be.a(\"string\");\r",
+              "    pm.expect(jsonData.body).to.be.a(\"string\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response time is less than 2000ms\", function () {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+              "});\r",
+              "pm.test(\"Response contains all required fields\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "\r",
+              "    pm.expect(jsonData).to.have.property(\"userId\");\r",
+              "    pm.expect(jsonData).to.have.property(\"id\");\r",
+              "    pm.expect(jsonData).to.have.property(\"title\");\r",
+              "    pm.expect(jsonData).to.have.property(\"body\");\r",
+              "});\r",
+              "pm.test(\"Response contains all required fields\", function () {\r",
+              "    const jsonData = pm.response.json();\r",
+              "\r",
+              "    pm.expect(jsonData).to.have.property(\"userId\");\r",
+              "    pm.expect(jsonData).to.have.property(\"id\");\r",
+              "    pm.expect(jsonData).to.have.property(\"title\");\r",
+              "    pm.expect(jsonData).to.have.property(\"price\");\r",
+              "});\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/posts/{{postId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "posts",
+            "{{postId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create post",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"title\": \"Learning Postman\",\r\n    \"body\": \"Practicing API testing\",\r\n    \"userId\": 1\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/posts",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "posts"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update post",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"title\": \"Learning Postman\",\r\n    \"body\": \"Practicing API testing\",\r\n    \"userId\": 1\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/posts/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "posts",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update post Title",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"title\": \"Updated using PATCH\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/posts/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "posts",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Post",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/posts/1",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "posts",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "API-STUDENT-008 – Invalid email format",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "9732e858-7ebe-4a47-bba2-c7a4dc1c5912",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"firstName\": \"Naveed\",\r\n  \"lastName\": \"InvalidEmail\",\r\n  \"email\": \"not-an-email\",\r\n  \"grade\": \"Grade 8\",\r\n  \"guardianName\": \"QA Guardian\",\r\n  \"status\": \"active\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:4173/api/students",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "4173",
+          "path": [
+            "api",
+            "students"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "API-PAYMENT-012 – Payment against paid invoice",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"invoiceId\": \"inv-7d48e18c\",\r\n  \"amount\": 30000,\r\n  \"method\": \"bank_transfer\",\r\n  \"reference\": \"QA-FULL-011\",\r\n  \"paymentDate\": \"2026-08-23\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:4173/api/payments",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "4173",
+          "path": [
+            "api",
+            "payments"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "http://127.0.0.1:4173/api/refunds",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"paymentId\": \"pay-1909cc65\",\r\n  \"amount\": 5000,\r\n  \"reason\": \"Partial refund requested during QA testing\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:4173/api/refunds",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "4173",
+          "path": [
+            "api",
+            "refunds"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "API-REFUND-015 – Excessive refund rejected",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"paymentId\": \"pay-1909cc65\",\r\n  \"amount\": 16000,\r\n  \"reason\": \"Testing refund amount above the remaining refundable balance\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:4173/api/refunds",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "4173",
+          "path": [
+            "api",
+            "refunds"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "API-RBAC-016 – Viewer cannot create student",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{viewer_token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"firstName\": \"Viewer\",\r\n  \"lastName\": \"Forbidden\",\r\n  \"email\": \"viewer.forbidden016@example.test\",\r\n  \"grade\": \"Grade 8\",\r\n  \"guardianName\": \"QA Guardian\",\r\n  \"status\": \"active\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:4173/api/students",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "4173",
+          "path": [
+            "api",
+            "students"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "API-LOGIN-001 – Valid admin login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const json = pm.response.json();\r\npm.environment.set(\"token\", json.token);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"username\": \"qa.admin\",\r\n  \"password\": \"Admin123!\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:4173/api/auth/login",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "4173",
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "API-STUDENT-005 – Automated missing fields",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const response = pm.response.json();\r\n\r\npm.test(\"Missing fields return 422\", function () {\r\n  pm.response.to.have.status(422);\r\n});\r\n\r\npm.test(\"Error code is VALIDATION_ERROR\", function () {\r\n  pm.expect(response.error.code).to.eql(\"VALIDATION_ERROR\");\r\n});\r\n\r\npm.test(\"Required-field errors are returned\", function () {\r\n  const fields = response.error.fields;\r\n\r\n  pm.expect(fields).to.have.property(\"firstName\");\r\n  pm.expect(fields).to.have.property(\"lastName\");\r\n  pm.expect(fields).to.have.property(\"email\");\r\n  pm.expect(fields).to.have.property(\"grade\");\r\n  pm.expect(fields).to.have.property(\"guardianName\");\r\n});\r\n\r\npm.test(\"No student is returned\", function () {\r\n  pm.expect(response.student).to.be.undefined;\r\n});\r\n\r\npm.test(\"Response time is below 500 ms\", function () {\r\n  pm.expect(pm.response.responseTime).to.be.below(500);\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:4173/api/students",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "4173",
+          "path": [
+            "api",
+            "students"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "API-STUDENT-008 – Automated invalid email",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const response = pm.response.json();\r\n\r\npm.test(\"Invalid email returns 422\", function () {\r\n  pm.response.to.have.status(422);\r\n});\r\n\r\npm.test(\"Error code is VALIDATION_ERROR\", function () {\r\n  pm.expect(response.error.code).to.eql(\"VALIDATION_ERROR\");\r\n});\r\n\r\npm.test(\"Email field error is returned\", function () {\r\n  pm.expect(response.error.fields).to.have.property(\"email\");\r\n});\r\n\r\npm.test(\"No student is returned\", function () {\r\n  pm.expect(response.student).to.be.undefined;\r\n});\r\n\r\npm.test(\"Response time is below 500 ms\", function () {\r\n  pm.expect(pm.response.responseTime).to.be.below(500);\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"firstName\": \"Invalid\",\r\n  \"lastName\": \"Email\",\r\n  \"email\": \"not-an-email\",\r\n  \"grade\": \"Grade 8\",\r\n  \"guardianName\": \"Automation Guardian\",\r\n  \"status\": \"active\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/students",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "students"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "API-PAYMENT-011 – Automated complete payment",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const response = pm.response.json();\r\n\r\npm.test(\"Complete payment returns 201\", function () {\r\n  pm.response.to.have.status(201);\r\n});\r\n\r\npm.test(\"Payment ID is returned\", function () {\r\n  pm.expect(response.payment.id).to.be.a(\"string\").and.not.empty;\r\n});\r\n\r\npm.test(\"Payment amount is £300\", function () {\r\n  pm.expect(response.payment.amountCents).to.eql(30000);\r\n});\r\n\r\npm.test(\"Invoice becomes fully paid\", function () {\r\n  pm.expect(response.invoice.status).to.eql(\"paid\");\r\n  pm.expect(response.invoice.paidCents).to.eql(50000);\r\n  pm.expect(response.invoice.outstandingCents).to.eql(0);\r\n});\r\n\r\npm.test(\"Response time is below 500 ms\", function () {\r\n  pm.expect(pm.response.responseTime).to.be.below(500);\r\n});\r\n\r\npm.environment.set(\"full_payment_id\", response.payment.id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"invoiceId\": \"{{invoice_id}}\",\r\n  \"amount\": 300,\r\n  \"method\": \"bank_transfer\",\r\n  \"reference\": \"AUTO-FULL-{{$timestamp}}\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/payments",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "payments"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "API-PAYMENT-012 – Automated paid-invoice rejection",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const response = pm.response.json();\r\n\r\npm.test(\"Payment against paid invoice returns 422\", function () {\r\n  pm.response.to.have.status(422);\r\n});\r\n\r\npm.test(\"Error code is VALIDATION_ERROR\", function () {\r\n  pm.expect(response.error.code).to.eql(\"VALIDATION_ERROR\");\r\n});\r\n\r\npm.test(\"Amount field error is returned\", function () {\r\n  pm.expect(response.error.fields).to.have.property(\"amount\");\r\n});\r\n\r\npm.test(\"No payment is returned\", function () {\r\n  pm.expect(response.payment).to.be.undefined;\r\n});\r\n\r\npm.test(\"Response time is below 500 ms\", function () {\r\n  pm.expect(pm.response.responseTime).to.be.below(500);\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"invoiceId\": \"{{invoice_id}}\",\r\n  \"amount\": 1,\r\n  \"method\": \"card\",\r\n  \"reference\": \"AUTO-OVERPAY-{{$timestamp}}\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/payments",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "payments"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "API-PAYMENT-013 – Automated duplicate reference",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const response = pm.response.json();\r\n\r\npm.test(\"Duplicate reference returns 409\", function () {\r\n  pm.response.to.have.status(409);\r\n});\r\n\r\npm.test(\"Error code is DUPLICATE_REFERENCE\", function () {\r\n  pm.expect(response.error.code).to.eql(\"DUPLICATE_REFERENCE\");\r\n});\r\n\r\npm.test(\"Reference field error is returned\", function () {\r\n  pm.expect(response.error.fields).to.have.property(\"reference\");\r\n});\r\n\r\npm.test(\"No payment is returned\", function () {\r\n  pm.expect(response.payment).to.be.undefined;\r\n});\r\n\r\npm.test(\"Response time is below 500 ms\", function () {\r\n  pm.expect(pm.response.responseTime).to.be.below(500);\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"invoiceId\": \"inv-2002\",\r\n  \"amount\": 1,\r\n  \"method\": \"card\",\r\n  \"reference\": \"{{payment_reference}}\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/payments",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "payments"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "API-REFUND-014 – Automated partial refund",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const response = pm.response.json();\r\n\r\npm.test(\"Partial refund returns 201\", function () {\r\n  pm.response.to.have.status(201);\r\n});\r\n\r\npm.test(\"Refund ID is returned\", function () {\r\n  pm.expect(response.refund.id).to.be.a(\"string\").and.not.empty;\r\n});\r\n\r\npm.test(\"Refund amount is £50\", function () {\r\n  pm.expect(response.refund.amountCents).to.eql(5000);\r\n});\r\n\r\npm.test(\"Invoice becomes partial with £50 outstanding\", function () {\r\n  pm.expect(response.invoice.status).to.eql(\"partial\");\r\n  pm.expect(response.invoice.outstandingCents).to.eql(5000);\r\n});\r\n\r\npm.test(\"Response time is below 500 ms\", function () {\r\n  pm.expect(pm.response.responseTime).to.be.below(500);\r\n});\r\n\r\npm.environment.set(\"refund_id\", response.refund.id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"paymentId\": \"{{payment_id}}\",\r\n  \"amount\": 50,\r\n  \"reason\": \"Automated partial refund test\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/refunds",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "refunds"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "http://127.0.0.1:4173/api/health",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:4173/api/health",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "4173",
+          "path": [
+            "api",
+            "health"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "API-LOGIN-002 – Automated invalid login",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"username\": \"qa.admin\",\r\n  \"password\": \"WrongPassword123!\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:4173/api/auth/login",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "4173",
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "API-AUTH-003 – Automated missing token",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:4173/api/students",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "4173",
+          "path": [
+            "api",
+            "students"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "API-AUTH-004 – Automated valid token",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:4173/api/students",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "4173",
+          "path": [
+            "api",
+            "students"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "API-STUDENT-005 – Automated missing fields",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const response = pm.response.json();\r\n\r\npm.test(\"Status code is 422\", function () {\r\n    pm.response.to.have.status(422);\r\n});\r\n\r\npm.test(\"Validation error is returned\", function () {\r\n    pm.expect(response.error.code).to.eql(\"VALIDATION_ERROR\");\r\n});\r\n\r\npm.test(\"First name is required\", function () {\r\n    pm.expect(response.error.fields.firstName).to.exist;\r\n});\r\n\r\npm.test(\"Last name is required\", function () {\r\n    pm.expect(response.error.fields.lastName).to.exist;\r\n});\r\n\r\npm.test(\"Email validation is returned\", function () {\r\n    pm.expect(response.error.fields.email).to.exist;\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:4173/api/students",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "4173",
+          "path": [
+            "api",
+            "students"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "API-STUDENT-006 – Automated valid student",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"firstName\": \"Automation\",\r\n  \"lastName\": \"Student\",\r\n  \"email\": \"automation.student{{$timestamp}}@example.test\",\r\n  \"grade\": \"Grade 8\",\r\n  \"guardianName\": \"QA Guardian\",\r\n  \"status\": \"active\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:4173/api/students",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "4173",
+          "path": [
+            "api",
+            "students"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "API-STUDENT-007 – Automated duplicate email",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const response = pm.response.json();\r\n\r\npm.test(\"Duplicate email returns 409\", function () {\r\n    pm.response.to.have.status(409);\r\n});\r\n\r\npm.test(\"Duplicate error code is returned\", function () {\r\n    pm.expect(response.error.code).to.eql(\"DUPLICATE_EMAIL\");\r\n});\r\n\r\npm.test(\"Error message is returned\", function () {\r\n    pm.expect(response.error.message).to.be.a(\"string\").and.not.empty;\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"firstName\": \"Duplicate\",\r\n  \"lastName\": \"Student\",\r\n  \"email\": \"{{student_email}}\",\r\n  \"grade\": \"Grade 8\",\r\n  \"guardianName\": \"QA Guardian\",\r\n  \"status\": \"active\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:4173/api/students",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "4173",
+          "path": [
+            "api",
+            "students"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "API-INVOICE-009 – Automated valid invoice",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const response = pm.response.json();\r\n\r\npm.test(\"Invoice creation returns 201\", function () {\r\n    pm.response.to.have.status(201);\r\n});\r\n\r\npm.test(\"Invoice ID is returned\", function () {\r\n    pm.expect(response.invoice.id).to.be.a(\"string\").and.not.empty;\r\n});\r\n\r\npm.test(\"Invoice amount is 30000 cents\", function () {\r\n    pm.expect(response.invoice.amountCents).to.eql(30000);\r\n});\r\n\r\npm.test(\"Invoice starts open\", function () {\r\n    pm.expect(response.invoice.status).to.eql(\"open\");\r\n});\r\n\r\npm.test(\"Outstanding amount is 30000 cents\", function () {\r\n    pm.expect(response.invoice.outstandingCents).to.eql(30000);\r\n});\r\n\r\npm.environment.set(\"invoice_id\", response.invoice.id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"studentId\": \"{{student_id}}\",\r\n  \"description\": \"Automation tuition invoice\",\r\n  \"amount\": 300,\r\n  \"dueDate\": \"2026-12-31\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:4173/api/invoices",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "4173",
+          "path": [
+            "api",
+            "invoices"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "API-PAYMENT-010 – Automated partial payment",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const response = pm.response.json();\r\n\r\npm.test(\"Partial payment returns 201\", function () {\r\n    pm.response.to.have.status(201);\r\n});\r\n\r\npm.test(\"Payment ID is returned\", function () {\r\n    pm.expect(response.payment.id).to.be.a(\"string\").and.not.empty;\r\n});\r\n\r\npm.test(\"Payment amount is 20000 cents\", function () {\r\n    pm.expect(response.payment.amountCents).to.eql(20000);\r\n});\r\n\r\npm.test(\"Invoice status becomes partial\", function () {\r\n    pm.expect(response.invoice.status).to.eql(\"partial\");\r\n});\r\n\r\npm.test(\"Outstanding balance is 10000 cents\", function () {\r\n    pm.expect(response.invoice.outstandingCents).to.eql(10000);\r\n});\r\n\r\npm.environment.set(\"payment_id\", response.payment.id);\r\npm.environment.set(\"payment_reference\", response.payment.reference);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"invoiceId\": \"{{invoice_id}}\",\r\n  \"amount\": 200,\r\n  \"method\": \"card\",\r\n  \"reference\": \"AUTO-PARTIAL-{{$timestamp}}\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:4173/api/payments",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "4173",
+          "path": [
+            "api",
+            "payments"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "API-REFUND-015 – Automated excessive refund - Method: POST",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const response = pm.response.json();\r\n\r\npm.test(\"Excessive refund returns 422\", function () {\r\n    pm.response.to.have.status(422);\r\n});\r\n\r\npm.test(\"Validation error is returned\", function () {\r\n    pm.expect(response.error.code).to.eql(\"VALIDATION_ERROR\");\r\n});\r\n\r\npm.test(\"Refund amount error is returned\", function () {\r\n    pm.expect(response.error.fields.amount).to.exist;\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"paymentId\": \"{{payment_id}}\",\r\n  \"amount\": 160,\r\n  \"reason\": \"Testing refund above the refundable balance\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:4173/api/refunds",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "4173",
+          "path": [
+            "api",
+            "refunds"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "API-PAYMENT-010 – Automated partial payment",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const response = pm.response.json();\r\n\r\npm.test(\"Partial payment returns 201\", function () {\r\n  pm.response.to.have.status(201);\r\n});\r\n\r\npm.test(\"Payment ID is returned\", function () {\r\n  pm.expect(response.payment.id).to.be.a(\"string\").and.not.empty;\r\n});\r\n\r\npm.test(\"Payment amount is £200\", function () {\r\n  pm.expect(response.payment.amountCents).to.eql(20000);\r\n});\r\n\r\npm.test(\"Invoice becomes partial\", function () {\r\n  pm.expect(response.invoice.status).to.eql(\"partial\");\r\n  pm.expect(response.invoice.paidCents).to.eql(20000);\r\n  pm.expect(response.invoice.outstandingCents).to.eql(30000);\r\n});\r\n\r\npm.test(\"Response time is below 500 ms\", function () {\r\n  pm.expect(pm.response.responseTime).to.be.below(500);\r\n});\r\n\r\npm.environment.set(\"payment_id\", response.payment.id);\r\npm.environment.set(\"payment_reference\", response.payment.reference);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"invoiceId\": \"{{invoice_id}}\",\r\n  \"amount\": 200,\r\n  \"method\": \"card\",\r\n  \"reference\": \"AUTO-PARTIAL-{{$timestamp}}\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/payments",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "payments"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "API-PAYMENT-010 – Automated partial payment",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const response = pm.response.json();\r\n\r\npm.test(\"Partial payment returns 201\", function () {\r\n  pm.response.to.have.status(201);\r\n});\r\n\r\npm.test(\"Payment ID is returned\", function () {\r\n  pm.expect(response.payment.id).to.be.a(\"string\").and.not.empty;\r\n});\r\n\r\npm.test(\"Payment amount is £200\", function () {\r\n  pm.expect(response.payment.amountCents).to.eql(20000);\r\n});\r\n\r\npm.test(\"Invoice becomes partial\", function () {\r\n  pm.expect(response.invoice.status).to.eql(\"partial\");\r\n  pm.expect(response.invoice.paidCents).to.eql(20000);\r\n  pm.expect(response.invoice.outstandingCents).to.eql(30000);\r\n});\r\n\r\npm.test(\"Response time is below 500 ms\", function () {\r\n  pm.expect(pm.response.responseTime).to.be.below(500);\r\n});\r\n\r\npm.environment.set(\"payment_id\", response.payment.id);\r\npm.environment.set(\"payment_reference\", response.payment.reference);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{token}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"invoiceId\": \"{{invoice_id}}\",\r\n  \"amount\": 200,\r\n  \"method\": \"card\",\r\n  \"reference\": \"AUTO-PARTIAL-{{$timestamp}}\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/payments",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "payments"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": ""
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ]
+}

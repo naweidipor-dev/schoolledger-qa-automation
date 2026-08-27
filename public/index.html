@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A fictional school-finance application for QA automation practice.">
+  <title>SchoolLedger QA Lab</title>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/password-toggle.css">
+</head>
+<body>
+  <div id="login-screen" class="login-screen">
+    <section class="login-card" aria-labelledby="login-title">
+      <div class="brand brand-login"><span class="brand-mark">SL</span><span>SchoolLedger <small>QA Lab</small></span></div>
+      <p class="eyebrow">TRAINING ENVIRONMENT</p>
+      <h1 id="login-title">Practise quality engineering on a real workflow.</h1>
+      <p class="login-copy">A fictional school billing system built for UI, API, data, security, role and CI/CD testing.</p>
+      <form id="login-form" novalidate>
+        <label>Username<input id="username" name="username" autocomplete="username" required data-testid="username"></label>
+        <label>Password
+          <span class="password-field">
+            <input id="password" name="password" type="password" autocomplete="current-password" required data-testid="password">
+            <button id="toggle-password" class="password-toggle" type="button" aria-label="Show password" aria-pressed="false" data-testid="toggle-password">Show</button>
+          </span>
+        </label>
+        <p id="login-error" class="form-error" role="alert"></p>
+        <button class="button primary full" type="submit" data-testid="login-submit">Sign in</button>
+      </form>
+      <div class="demo-users">
+        <p>Demo accounts</p>
+        <button type="button" data-demo="admin">Admin</button>
+        <button type="button" data-demo="accountant">Accountant</button>
+        <button type="button" data-demo="viewer">Viewer</button>
+      </div>
+      <p class="training-note">Training only. No real student, employer or banking data is used.</p>
+    </section>
+    <aside class="login-aside" aria-hidden="true">
+      <div class="aside-metric"><span>UI</span><strong>Critical journeys</strong></div>
+      <div class="aside-metric"><span>API</span><strong>Contracts & validation</strong></div>
+      <div class="aside-metric"><span>CI</span><strong>Release confidence</strong></div>
+      <div class="decor decor-one"></div><div class="decor decor-two"></div>
+    </aside>
+  </div>
+
+  <div id="app" class="app hidden">
+    <aside class="sidebar">
+      <div class="brand"><span class="brand-mark">SL</span><span>SchoolLedger <small>QA Lab</small></span></div>
+      <nav aria-label="Primary navigation">
+        <button class="nav-item active" data-page="dashboard"><span>◫</span>Overview</button>
+        <button class="nav-item" data-page="students"><span>◎</span>Students</button>
+        <button class="nav-item" data-page="invoices"><span>▤</span>Invoices</button>
+        <button class="nav-item" data-page="payments"><span>◇</span>Payments</button>
+        <button class="nav-item" data-page="audit"><span>↻</span>Audit trail</button>
+        <button class="nav-item" data-page="sdet"><span>⌘</span>SDET Lab</button>
+        <button class="nav-item" data-page="practice"><span>✓</span>QA practice</button>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="environment"><span></span>Local training environment</div>
+        <button id="logout-button" class="text-button">Sign out</button>
+      </div>
+    </aside>
+
+    <main>
+      <header class="topbar">
+        <button id="menu-button" class="icon-button menu-button" aria-label="Toggle navigation">☰</button>
+        <div><p id="page-kicker" class="eyebrow">FINANCE OPERATIONS</p><h1 id="page-title">Overview</h1></div>
+        <div class="user-block"><div><strong id="user-name"></strong><small id="user-role"></small></div><span id="user-avatar" class="avatar"></span></div>
+      </header>
+
+      <div id="page-dashboard" class="page active-page">
+        <section class="hero-panel">
+          <div><p class="eyebrow">RELEASE SIGNAL</p><h2>School finances at a glance</h2><p>Use the dashboard to verify calculations, workflow state, permissions and data consistency.</p></div>
+          <div class="signal"><span class="signal-dot"></span><div><small>Environment</small><strong>Ready for testing</strong></div></div>
+        </section>
+        <section id="metrics" class="metrics" aria-label="Finance metrics"></section>
+        <section class="dashboard-grid">
+          <article class="panel"><div class="panel-header"><div><p class="eyebrow">NEEDS ATTENTION</p><h2>Outstanding invoices</h2></div><button class="text-button" data-go="invoices">View all</button></div><div id="attention-list"></div></article>
+          <article class="panel"><div class="panel-header"><div><p class="eyebrow">LATEST ACTIVITY</p><h2>Recent payments</h2></div><button class="text-button" data-go="payments">View all</button></div><div id="recent-payments"></div></article>
+        </section>
+      </div>
+
+      <div id="page-students" class="page">
+        <section class="toolbar"><div class="search-wrap"><span>⌕</span><input id="student-search" type="search" placeholder="Search students, grade or email" aria-label="Search students"></div><select id="student-status" aria-label="Filter student status"><option value="all">All statuses</option><option value="active">Active</option><option value="inactive">Inactive</option></select><button class="button primary write-action" id="add-student">Add student</button></section>
+        <section class="panel table-panel"><div class="panel-header"><div><p class="eyebrow">DIRECTORY</p><h2>Student accounts</h2></div><span id="student-count" class="count-pill"></span></div><div class="table-scroll"><table><thead><tr><th>Student</th><th>Grade</th><th>Guardian</th><th>Status</th><th>Invoices</th><th>Outstanding</th></tr></thead><tbody id="students-body"></tbody></table></div></section>
+      </div>
+
+      <div id="page-invoices" class="page">
+        <section class="toolbar"><select id="invoice-status" aria-label="Filter invoice status"><option value="all">All invoices</option><option value="open">Open</option><option value="partial">Partially paid</option><option value="overdue">Overdue</option><option value="paid">Paid</option></select><button class="button primary write-action" id="add-invoice">Create invoice</button></section>
+        <section class="panel table-panel"><div class="panel-header"><div><p class="eyebrow">RECEIVABLES</p><h2>Invoices</h2></div><span id="invoice-count" class="count-pill"></span></div><div class="table-scroll"><table><thead><tr><th>Invoice</th><th>Student</th><th>Description</th><th>Due</th><th>Status</th><th>Total</th><th>Outstanding</th><th></th></tr></thead><tbody id="invoices-body"></tbody></table></div></section>
+      </div>
+
+      <div id="page-payments" class="page">
+        <section class="toolbar"><div class="toolbar-copy"><p>Record payments and test duplicate references, excessive amounts and refunds.</p></div><button class="button primary write-action" id="add-payment">Record payment</button></section>
+        <section class="panel table-panel"><div class="panel-header"><div><p class="eyebrow">TRANSACTIONS</p><h2>Payment history</h2></div></div><div class="table-scroll"><table><thead><tr><th>Payment</th><th>Invoice</th><th>Method</th><th>Reference</th><th>Date</th><th>Amount</th><th></th></tr></thead><tbody id="payments-body"></tbody></table></div></section>
+      </div>
+
+      <div id="page-audit" class="page">
+        <section class="panel table-panel"><div class="panel-header"><div><p class="eyebrow">TRACEABILITY</p><h2>Audit trail</h2><p>Every successful write action produces evidence here.</p></div></div><div class="table-scroll"><table><thead><tr><th>Time</th><th>Actor</th><th>Action</th><th>Entity</th><th>Details</th></tr></thead><tbody id="audit-body"></tbody></table></div></section>
+      </div>
+
+      <div id="page-sdet" class="page">
+        <section class="sdet-hero"><div><p class="eyebrow">SOFTWARE DEVELOPMENT ENGINEER IN TEST</p><h2>Engineer the system that tests the system.</h2><p>Practise contract testing, testability, data engineering, reliability, diagnostics and release decisions—not only UI scripting.</p></div><div class="sdet-score"><strong id="sdet-progress">0%</strong><small>learning evidence complete</small></div></section>
+        <section class="sdet-skill-grid" id="sdet-skills">
+          <label><input type="checkbox" data-skill="code"> <span><strong>Programming & OOP</strong><small>Async code, modules, clean abstractions</small></span></label>
+          <label><input type="checkbox" data-skill="framework"> <span><strong>Framework design</strong><small>Fixtures, clients, page/component objects</small></span></label>
+          <label><input type="checkbox" data-skill="contract"> <span><strong>API contracts</strong><small>Status, schema, negative and auth checks</small></span></label>
+          <label><input type="checkbox" data-skill="data"> <span><strong>Test data & SQL</strong><small>Factories, isolation and reconciliation</small></span></label>
+          <label><input type="checkbox" data-skill="reliability"> <span><strong>Reliability</strong><small>Faults, traces, logs and flaky-test triage</small></span></label>
+          <label><input type="checkbox" data-skill="delivery"> <span><strong>CI/CD quality gates</strong><small>Smoke, regression, reports and decisions</small></span></label>
+        </section>
+        <section class="lab-grid">
+          <article class="panel lab-panel diagnostics-panel"><div class="panel-header"><div><p class="eyebrow">RELEASE ENGINEERING</p><h2>Automated release diagnostics</h2><p>Run invariant, relationship and audit checks against current data.</p></div><button id="run-diagnostics" class="button primary">Run checks</button></div><div id="diagnostic-summary" class="diagnostic-summary empty-state">No diagnostic run yet.</div><div id="diagnostic-results" class="diagnostic-results"></div></article>
+          <article class="panel lab-panel"><div class="panel-header"><div><p class="eyebrow">CONTRACT TESTING</p><h2>API console</h2><p>Send authenticated requests and inspect status, timing and JSON contracts.</p></div></div><form id="api-console-form" class="api-console"><div class="api-request-line"><select id="api-method" aria-label="HTTP method"><option>GET</option><option>POST</option><option>PATCH</option></select><input id="api-path" value="/api/dashboard" aria-label="API path"></div><textarea id="api-body" aria-label="JSON request body" placeholder='{"field":"value"}'></textarea><button class="button secondary" type="submit">Send request</button></form><div class="response-meta"><span id="api-status">Not run</span><span id="api-duration"></span></div><pre id="api-response" class="code-output">Choose an endpoint and send a request.</pre></article>
+          <article class="panel lab-panel"><div class="panel-header"><div><p class="eyebrow">TEST-DATA ENGINEERING</p><h2>Student data factory</h2><p>Create independent, traceable data instead of relying on shared records.</p></div><button id="generate-student" class="button secondary">Generate</button></div><pre id="generated-student" class="code-output">Generate a unique student payload.</pre><button id="create-generated-student" class="button primary write-action" disabled>Create through API</button></article>
+          <article class="panel lab-panel fault-panel"><div class="panel-header"><div><p class="eyebrow">RESILIENCE TESTING</p><h2>Controlled fault injection</h2><p>Admin only. Introduce observable failures, diagnose them, then restore normal behaviour.</p></div><span id="fault-state" class="status active">normal</span></div><div class="fault-controls"><label>API latency<select id="fault-latency"><option value="0">No delay</option><option value="300">300 ms</option><option value="1000">1 second</option><option value="2000">2 seconds</option></select></label><label class="switch-row"><input id="fault-payment" type="checkbox"><span>Simulate payment-service 503</span></label><label class="switch-row"><input id="fault-dashboard" type="checkbox"><span>Simulate stale dashboard total</span></label></div><button id="apply-faults" class="button danger write-action">Apply lab configuration</button><p class="training-note">Controlled faults reset when Admin restores demo data or the server restarts.</p></article>
+        </section>
+        <section class="panel architecture-panel"><div class="panel-header"><div><p class="eyebrow">SYSTEM THINKING</p><h2>Automation architecture to build</h2></div></div><div class="architecture-flow"><div><strong>Test intent</strong><small>Risk & acceptance criteria</small></div><span>→</span><div><strong>Test layer</strong><small>UI · API · data</small></div><span>→</span><div><strong>Reusable framework</strong><small>Fixtures · clients · factories</small></div><span>→</span><div><strong>Evidence</strong><small>Trace · logs · report</small></div><span>→</span><div><strong>Release signal</strong><small>Go · conditional · no-go</small></div></div></section>
+      </div>
+
+      <div id="page-practice" class="page">
+        <section class="practice-intro"><p class="eyebrow">GUIDED LAB</p><h2>Turn each feature into test evidence</h2><p>Complete these exercises manually, through the REST API, and with automation. Record expected and actual results.</p></section>
+        <section class="practice-grid">
+          <article class="practice-card"><span>01</span><h3>Authentication & roles</h3><p>Verify valid/invalid login, missing tokens, and Admin, Accountant and Viewer permissions.</p><small>Security · API · negative testing</small></article>
+          <article class="practice-card"><span>02</span><h3>Student validation</h3><p>Test required fields, email format, duplicate email, status transitions and search.</p><small>Boundary · equivalence · UI/API</small></article>
+          <article class="practice-card"><span>03</span><h3>Invoice lifecycle</h3><p>Create future and overdue invoices; verify open, partial, paid and overdue calculations.</p><small>State transition · business rules</small></article>
+          <article class="practice-card"><span>04</span><h3>Payments & refunds</h3><p>Test duplicate references, overpayment, partial payment, full payment and refund limits.</p><small>Data integrity · idempotency</small></article>
+          <article class="practice-card"><span>05</span><h3>Dashboard consistency</h3><p>Reconcile billed, collected and outstanding totals against invoice and payment records.</p><small>SQL · API · UI reconciliation</small></article>
+          <article class="practice-card"><span>06</span><h3>Release gate</h3><p>Run smoke and regression suites, investigate failures and publish a go/no-go recommendation.</p><small>CI/CD · reporting · risk</small></article>
+        </section>
+        <section class="panel test-workspace" aria-labelledby="test-workspace-title">
+          <div class="panel-header"><div><p class="eyebrow">TEST EVIDENCE</p><h2 id="test-workspace-title">Test Case Workspace</h2><p>Complete records save automatically, and unfinished drafts return after refresh.</p></div><div class="workspace-save-state"><span id="test-case-autosave" aria-live="polite">Ready</span><span id="test-case-count" class="count-pill">0 cases</span></div></div>
+          <form id="test-case-form" class="test-case-form">
+            <input id="test-case-edit-index" type="hidden">
+            <label>Test case ID<input id="test-case-id" required placeholder="API-LOGIN-001"></label>
+            <label>Scenario<input id="test-case-scenario" required placeholder="Valid admin login"></label>
+            <label class="full-field">Expected result<textarea id="test-case-expected" required placeholder="200 OK, token returned, role is admin"></textarea></label>
+            <label class="full-field">Actual result<textarea id="test-case-actual" required placeholder="Enter the response you received"></textarea></label>
+            <label>Status<select id="test-case-status"><option>Not run</option><option>Pass</option><option>Fail</option><option>Blocked</option></select></label>
+            <label>Evidence<input id="test-case-evidence" placeholder="Postman response, screenshot or report"></label>
+            <label class="full-field">Notes<textarea id="test-case-notes" placeholder="Observations, defect ID or follow-up"></textarea></label>
+            <div class="test-case-actions"><button id="cancel-test-case-edit" class="button secondary hidden" type="button">Cancel edit</button><button class="button primary" type="submit">Save and clear</button></div>
+          </form>
+          <div class="table-scroll test-case-table"><table><thead><tr><th>ID</th><th>Scenario</th><th>Expected</th><th>Actual</th><th>Status</th><th>Evidence / notes</th><th>Actions</th></tr></thead><tbody id="test-cases-body"></tbody></table></div>
+        </section>
+        <section class="panel reset-panel"><div><h3>Reset the training data</h3><p>Admin only. Restore the original students, invoices and payments for repeatable tests.</p></div><button id="reset-data" class="button danger write-action">Reset demo data</button></section>
+      </div>
+    </main>
+  </div>
+
+  <dialog id="form-dialog">
+    <form id="entity-form" method="dialog" novalidate>
+      <div class="dialog-header"><div><p id="dialog-kicker" class="eyebrow"></p><h2 id="dialog-title"></h2></div><button type="button" id="dialog-close" class="icon-button" aria-label="Close">×</button></div>
+      <div id="dialog-fields" class="dialog-fields"></div>
+      <p id="dialog-error" class="form-error" role="alert"></p>
+      <div class="dialog-actions"><button type="button" id="dialog-cancel" class="button secondary">Cancel</button><button type="submit" id="dialog-submit" class="button primary">Save</button></div>
+    </form>
+  </dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script type="module" src="/app.js?v=32"></script>
+</body>
+</html>

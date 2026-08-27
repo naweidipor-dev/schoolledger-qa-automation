@@ -1,0 +1,20 @@
+{
+  "info": {"name":"SchoolLedger QA Lab","schema":"https://schema.getpostman.com/json/collection/v2.1.0/collection.json","description":"Positive, negative, contract, authorization and data-integrity exercises."},
+  "auth": {"type":"bearer","bearer":[{"key":"token","value":"{{token}}","type":"string"}]},
+  "item": [
+    {"name":"01 - Authentication","item":[
+      {"name":"Login - Admin","request":{"auth":{"type":"noauth"},"method":"POST","header":[{"key":"Content-Type","value":"application/json"}],"body":{"mode":"raw","raw":"{\n  \"username\": \"qa.admin\",\n  \"password\": \"Admin123!\"\n}"},"url":"{{baseUrl}}/api/auth/login"},"event":[{"listen":"test","script":{"exec":["pm.test('returns 200', () => pm.response.to.have.status(200));","const json = pm.response.json();","pm.expect(json.user.role).to.eql('admin');","pm.environment.set('token', json.token);"]}}]},
+      {"name":"Login - Invalid password","request":{"auth":{"type":"noauth"},"method":"POST","header":[{"key":"Content-Type","value":"application/json"}],"body":{"mode":"raw","raw":"{\"username\":\"qa.admin\",\"password\":\"wrong\"}"},"url":"{{baseUrl}}/api/auth/login"},"event":[{"listen":"test","script":{"exec":["pm.test('returns 401', () => pm.response.to.have.status(401));","pm.expect(pm.response.json().error.code).to.eql('INVALID_CREDENTIALS');"]}}]}
+    ]},
+    {"name":"02 - Students","item":[
+      {"name":"List students","request":{"method":"GET","url":"{{baseUrl}}/api/students?status=active"},"event":[{"listen":"test","script":{"exec":["pm.test('returns active students', () => pm.response.to.have.status(200));","pm.response.json().students.forEach(s => pm.expect(s.status).to.eql('active'));"]}}]},
+      {"name":"Create student - Validation failure","request":{"method":"POST","header":[{"key":"Content-Type","value":"application/json"}],"body":{"mode":"raw","raw":"{\"firstName\":\"\",\"email\":\"not-an-email\",\"status\":\"bad\"}"},"url":"{{baseUrl}}/api/students"},"event":[{"listen":"test","script":{"exec":["pm.test('returns field errors', () => pm.response.to.have.status(422));","pm.expect(pm.response.json().error.fields).to.have.property('email');"]}}]}
+    ]},
+    {"name":"03 - Invoices and payments","item":[
+      {"name":"List invoices","request":{"method":"GET","url":"{{baseUrl}}/api/invoices"},"event":[{"listen":"test","script":{"exec":["pm.test('invoice contract', () => { pm.response.to.have.status(200); const i=pm.response.json().invoices[0]; pm.expect(i).to.have.all.keys('id','studentId','description','amountCents','paidCents','dueDate','status','createdAt','outstandingCents','studentName'); });"]}}]},
+      {"name":"Record partial payment","request":{"method":"POST","header":[{"key":"Content-Type","value":"application/json"}],"body":{"mode":"raw","raw":"{\n  \"invoiceId\": \"{{invoiceId}}\",\n  \"amount\": 10,\n  \"method\": \"card\",\n  \"reference\": \"{{uniqueReference}}\"\n}"},"url":"{{baseUrl}}/api/payments"},"event":[{"listen":"test","script":{"exec":["pm.test('payment accepted', () => pm.response.to.have.status(201));","pm.expect(pm.response.json().invoice.outstandingCents).to.be.above(0);"]}}]},
+      {"name":"Reject overpayment","request":{"method":"POST","header":[{"key":"Content-Type","value":"application/json"}],"body":{"mode":"raw","raw":"{\"invoiceId\":\"{{invoiceId}}\",\"amount\":999999,\"method\":\"cash\",\"reference\":\"OVER-{{$timestamp}}\"}"},"url":"{{baseUrl}}/api/payments"},"event":[{"listen":"test","script":{"exec":["pm.test('overpayment rejected', () => pm.response.to.have.status(422));"]}}]}
+    ]},
+    {"name":"04 - Dashboard reconciliation","request":{"method":"GET","url":"{{baseUrl}}/api/dashboard"},"event":[{"listen":"test","script":{"exec":["pm.test('money totals reconcile', () => { const m=pm.response.json().metrics; pm.expect(m.totalBilledCents-m.collectedCents).to.eql(m.outstandingCents); });"]}}]}
+  ]
+}

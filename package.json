@@ -1,0 +1,26 @@
+{
+  "name": "school-ledger-qa-lab",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "A fictional school-finance application for practising QA automation, API testing, SQL, and CI/CD.",
+  "scripts": {
+    "start": "node src/server.mjs",
+    "dev": "node --watch src/server.mjs",
+    "test": "node --test tests/api/*.test.mjs",
+    "test:ui": "playwright test",
+    "test:ui:headed": "playwright test --headed",
+    "test:cypress": "cypress run",
+    "postman": "newman run postman/SchoolLedger-Automated-Regression.postman_collection.json -e postman/QA-Practice.postman_environment.json --folder \"SchoolLedger Automated Regression\"",
+    "postman:report": "newman run postman/SchoolLedger-Automated-Regression.postman_collection.json -e postman/QA-Practice.postman_environment.json --folder \"SchoolLedger Automated Regression\" --reporters cli,htmlextra --reporter-htmlextra-export evidence/newman/SchoolLedger-Newman-75-Passed.html --reporter-htmlextra-title \"SchoolLedger API Automated Regression\""
+  },
+  "devDependencies": {
+    "@playwright/test": "latest",
+    "cypress": "latest",
+    "newman": "latest",
+    "newman-reporter-htmlextra": "latest"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
