@@ -22,17 +22,19 @@ async function login(username, password) {
   return result.body.token;
 }
 
-before(async () => {
-  ({ server } = await createServer({ reset: true }));
-  await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
-  baseUrl = `http://127.0.0.1:${server.address().port}`;
-  adminToken = await login("qa.admin", "Admin123!");
-  viewerToken = await login("viewer", "Viewer123!");
-});
-
-after(async () => new Promise((resolve) => server.close(resolve)));
-
 describe("SchoolLedger REST API", { concurrency: 1 }, () => {
+  before(async () => {
+    ({ server } = await createServer({ reset: true }));
+    await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+    baseUrl = `http://127.0.0.1:${server.address().port}`;
+    adminToken = await login("qa.admin", "Admin123!");
+    viewerToken = await login("viewer", "Viewer123!");
+  });
+
+  after(async () => {
+    if (server?.listening) await new Promise((resolve) => server.close(resolve));
+  });
+
   test("health endpoint is public", async () => {
     const result = await request("/api/health");
     assert.equal(result.status, 200);
