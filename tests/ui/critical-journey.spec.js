@@ -39,7 +39,8 @@ test("admin creates a student and finds it using search", async ({ page }) => {
   await page.getByTestId("guardianName").fill("Test Guardian");
   await page.getByRole("button", { name: "Create student" }).click();
   await page.locator("#student-search").fill("Automation Candidate");
-  await expect(page.getByTestId("student-row")).toContainText("Automation Candidate");
+  const createdStudent = page.getByTestId("student-row").filter({ hasText: "Automation Candidate" });
+  await expect(createdStudent).toHaveCount(1);
 });
 
 test("viewer sees read-only navigation without write actions", async ({ page }) => {
