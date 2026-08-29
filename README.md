@@ -61,6 +61,7 @@ npm run postman
 | API automation | Positive, negative, validation, authentication and RBAC tests | `tests/api/`, `postman/` |
 | Postman/Newman | 18-request automated regression with 75 assertions | `evidence/newman/` |
 | Playwright | Cross-browser critical journeys using fixtures and Page Objects | `tests/ui/fixtures.js`, `tests/ui/pages/` |
+| Hybrid API/UI testing | Reusable API client for authentication, data reset and API-seeded UI verification | `tests/ui/api/school-ledger.api.js` |
 | Test reporting clarity | Named `test.step` actions expose business intent and timing in HTML reports | `evidence/framework/Playwright-Test-Steps-Verified.png` |
 | Test reliability | Isolated reset fixture, unique test data and web-first assertions | `tests/ui/` |
 | Reporting | HTML, JUnit XML and JSON reports; trace, screenshot and video on failure | `playwright.config.js` |
@@ -75,6 +76,7 @@ npm run postman
 - GitHub Actions: API, Postman/Newman and Playwright jobs passed.
 - Jenkins: pipeline completed with `Finished: SUCCESS`.
 - Playwright framework: reusable login/student Page Objects and automatic test-data reset fixture.
+- Hybrid automation: API-created test data verified through the browser UI.
 - Playwright reporting: named business-action steps verified in the HTML report.
 - CI reports: HTML, JUnit XML and JSON artifacts retained for 14 days.
 
@@ -87,5 +89,7 @@ After you have personally run, changed and explained the tests, you may say:
 > Refactored Playwright tests with reusable fixtures and Page Objects, published HTML/JUnit/JSON evidence, and configured passing GitHub Actions and Jenkins pipelines.
 
 > Added named Playwright test steps so CI reports clearly communicate business actions, assertions and execution timing.
+
+> Built a reusable Playwright API client and combined fast API test-data setup with cross-browser UI verification.
 
 Do not claim that it was production work or a confidential employer system.
