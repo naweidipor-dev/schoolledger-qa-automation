@@ -54,10 +54,34 @@ npm run postman
 - `practice/java-sdet/` - REST Assured and Selenium examples.
 - `practice/python/` - test-data integrity checks.
 
+## Verified portfolio skills
+
+| Area | Demonstrated skill | Evidence |
+|---|---|---|
+| API automation | Positive, negative, validation, authentication and RBAC tests | `tests/api/`, `postman/` |
+| Postman/Newman | 18-request automated regression with 75 assertions | `evidence/newman/` |
+| Playwright | Cross-browser critical journeys using fixtures and Page Objects | `tests/ui/fixtures.js`, `tests/ui/pages/` |
+| Test reliability | Isolated reset fixture, unique test data and web-first assertions | `tests/ui/` |
+| Reporting | HTML, JUnit XML and JSON reports; trace, screenshot and video on failure | `playwright.config.js` |
+| GitHub Actions | API, Newman and Playwright quality-gate jobs with downloadable artifacts | `.github/workflows/quality-gate.yml` |
+| Jenkins | Windows-compatible pipeline for checkout, install, API and UI smoke stages | `Jenkinsfile` |
+| Evidence management | CI success screens and downloadable report verification | `evidence/ci/`, `evidence/framework/` |
+
+### Current verified results
+
+- Postman runner: 75 passed, 0 failed.
+- Newman CLI regression: 18 requests and 75 assertions, 0 failures.
+- GitHub Actions: API, Postman/Newman and Playwright jobs passed.
+- Jenkins: pipeline completed with `Finished: SUCCESS`.
+- Playwright framework: reusable login/student Page Objects and automatic test-data reset fixture.
+- CI reports: HTML, JUnit XML and JSON artifacts retained for 14 days.
+
 ## Safe portfolio wording
 
 After you have personally run, changed and explained the tests, you may say:
 
 > Built a fictional school-finance QA lab with Playwright UI tests, API contract and negative tests, role-based access checks, Postman/Newman regression coverage, SQL reconciliation queries, and CI quality gates.
+
+> Refactored Playwright tests with reusable fixtures and Page Objects, published HTML/JUnit/JSON evidence, and configured passing GitHub Actions and Jenkins pipelines.
 
 Do not claim that it was production work or a confidential employer system.

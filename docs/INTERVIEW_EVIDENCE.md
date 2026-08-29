@@ -29,3 +29,13 @@ Do not memorise answers. Demonstrate the project and explain your own decisions.
 ## Honest portfolio explanation
 
 Say that SchoolLedger is a personal fictional training system. Describe what you personally ran, changed and diagnosed. Do not present it as employer or production work.
+
+## Completed evidence to demonstrate
+
+- Explain how the automatic fixture authenticates and resets test data before each UI scenario.
+- Show how `LoginPage` and `StudentsPage` separate page behaviour from test intent.
+- Demonstrate the GitHub Actions quality gate with three passing jobs.
+- Demonstrate the successful local Jenkins pipeline and explain the Windows `bat` adaptation.
+- Open the Newman HTML report and describe the 75 automated assertions.
+- Open the Playwright HTML report and identify the accompanying JUnit XML and JSON outputs.
+- Explain how screenshots, video and traces are retained when a Playwright test fails.
