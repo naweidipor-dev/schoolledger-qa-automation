@@ -38,4 +38,5 @@ Say that SchoolLedger is a personal fictional training system. Describe what you
 - Demonstrate the successful local Jenkins pipeline and explain the Windows `bat` adaptation.
 - Open the Newman HTML report and describe the 75 automated assertions.
 - Open the Playwright HTML report and identify the accompanying JUnit XML and JSON outputs.
+- Expand a Playwright test result and explain how named `test.step` actions make failures and timing easier to diagnose.
 - Explain how screenshots, video and traces are retained when a Playwright test fails.
