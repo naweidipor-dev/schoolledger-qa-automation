@@ -35,6 +35,7 @@ Say that SchoolLedger is a personal fictional training system. Describe what you
 - Explain how the automatic fixture authenticates and resets test data before each UI scenario.
 - Show how `LoginPage` and `StudentsPage` separate page behaviour from test intent.
 - Explain how `SchoolLedgerApi` creates deterministic test data through the API before verifying it in the UI.
+- Reproduce the password-label accessibility failure, explain its root cause, and show the passing CI run after the HTML fix.
 - Demonstrate the GitHub Actions quality gate with three passing jobs.
 - Demonstrate the successful local Jenkins pipeline and explain the Windows `bat` adaptation.
 - Open the Newman HTML report and describe the 75 automated assertions.

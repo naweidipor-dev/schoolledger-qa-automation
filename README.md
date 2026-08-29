@@ -62,6 +62,7 @@ npm run postman
 | Postman/Newman | 18-request automated regression with 75 assertions | `evidence/newman/` |
 | Playwright | Cross-browser critical journeys using fixtures and Page Objects | `tests/ui/fixtures.js`, `tests/ui/pages/` |
 | Hybrid API/UI testing | Reusable API client for authentication, data reset and API-seeded UI verification | `tests/ui/api/school-ledger.api.js` |
+| Accessibility testing | Accessible-name, ARIA state and keyboard-navigation checks that detected and verified a password-label defect | `tests/ui/accessibility.spec.js` |
 | Test reporting clarity | Named `test.step` actions expose business intent and timing in HTML reports | `evidence/framework/Playwright-Test-Steps-Verified.png` |
 | Test reliability | Isolated reset fixture, unique test data and web-first assertions | `tests/ui/` |
 | Reporting | HTML, JUnit XML and JSON reports; trace, screenshot and video on failure | `playwright.config.js` |
@@ -77,6 +78,7 @@ npm run postman
 - Jenkins: pipeline completed with `Finished: SUCCESS`.
 - Playwright framework: reusable login/student Page Objects and automatic test-data reset fixture.
 - Hybrid automation: API-created test data verified through the browser UI.
+- Accessibility automation: semantic labels, ARIA state and keyboard interaction verified after detecting and fixing a real defect.
 - Playwright reporting: named business-action steps verified in the HTML report.
 - CI reports: HTML, JUnit XML and JSON artifacts retained for 14 days.
 
@@ -91,5 +93,7 @@ After you have personally run, changed and explained the tests, you may say:
 > Added named Playwright test steps so CI reports clearly communicate business actions, assertions and execution timing.
 
 > Built a reusable Playwright API client and combined fast API test-data setup with cross-browser UI verification.
+
+> Added Playwright accessibility checks that exposed an incorrect password-label association, fixed the markup, and verified the repair in CI.
 
 Do not claim that it was production work or a confidential employer system.
