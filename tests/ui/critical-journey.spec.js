@@ -24,6 +24,22 @@ test("admin creates a student and finds it using search", async ({ loginPage, st
   await studentsPage.expectStudentVisible("Automation Candidate");
 });
 
+test("admin seeds a student through the API and verifies it in the UI", async ({ api, loginPage, studentsPage, credentials }) => {
+  const student = {
+    firstName: "Hybrid",
+    lastName: "Learner",
+    email: `hybrid-${Date.now()}@example.test`,
+    grade: "Grade 9",
+    guardianName: "API Setup Guardian",
+    status: "active"
+  };
+
+  await api.createStudent(credentials.admin, student);
+  await loginPage.signInSuccessfully(credentials.admin.username, credentials.admin.password);
+  await studentsPage.open();
+  await studentsPage.expectStudentVisible(`${student.firstName} ${student.lastName}`);
+});
+
 test("viewer sees read-only navigation without write actions", async ({ loginPage, studentsPage, credentials }) => {
   await loginPage.signInSuccessfully(credentials.viewer.username, credentials.viewer.password);
   await studentsPage.open();

@@ -1,4 +1,5 @@
 import { test as base, expect } from "@playwright/test";
+import { SchoolLedgerApi } from "./api/school-ledger.api.js";
 import { LoginPage } from "./pages/login.page.js";
 import { StudentsPage } from "./pages/students.page.js";
 
@@ -10,12 +11,12 @@ export const test = base.extend({
     });
   },
 
-  resetDemoData: [async ({ request, credentials }, use) => {
-    const loginResponse = await request.post("/api/auth/login", { data: credentials.admin });
-    expect(loginResponse.ok()).toBeTruthy();
-    const { token } = await loginResponse.json();
-    const resetResponse = await request.post("/api/reset", { headers: { Authorization: `Bearer ${token}` } });
-    expect(resetResponse.ok()).toBeTruthy();
+  api: async ({ request }, use) => {
+    await use(new SchoolLedgerApi(request));
+  },
+
+  resetDemoData: [async ({ api, credentials }, use) => {
+    await api.resetDemoData(credentials.admin);
     await use();
   }, { auto: true }],
 
