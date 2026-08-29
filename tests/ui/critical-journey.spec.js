@@ -1,57 +1,38 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "./fixtures.js";
 
-async function login(page, username = "qa.admin", password = "Admin123!") {
-  await page.goto("/");
-  await page.getByTestId("username").fill(username);
-  await page.getByTestId("password").fill(password);
-  await page.getByTestId("login-submit").click();
-  await expect(page.getByRole("heading", { name: "Overview" })).toBeVisible();
-}
-
-test.beforeEach(async ({ request }) => {
-  const loginResponse = await request.post("/api/auth/login", { data: { username: "qa.admin", password: "Admin123!" } });
-  const { token } = await loginResponse.json();
-  await request.post("/api/reset", { headers: { Authorization: `Bearer ${token}` } });
-});
-
-test("admin can sign in and view reconciled dashboard metrics", async ({ page }) => {
-  await login(page);
+test("admin can sign in and view reconciled dashboard metrics", async ({ page, loginPage, credentials }) => {
+  await loginPage.signInSuccessfully(credentials.admin.username, credentials.admin.password);
   await expect(page.locator("#metrics .metric-card")).toHaveCount(5);
   await expect(page.getByText("Ready for testing")).toBeVisible();
 });
 
-test("invalid login shows a useful error", async ({ page }) => {
-  await page.goto("/");
-  await page.getByTestId("username").fill("qa.admin");
-  await page.getByTestId("password").fill("wrong-password");
-  await page.getByTestId("login-submit").click();
-  await expect(page.getByRole("alert")).toContainText("incorrect");
+test("invalid login shows a useful error", async ({ loginPage, credentials }) => {
+  await loginPage.signIn(credentials.admin.username, "wrong-password");
+  await expect(loginPage.error).toContainText("incorrect");
 });
 
-test("admin creates a student and finds it using search", async ({ page }) => {
-  await login(page);
-  await page.getByRole("button", { name: "Students" }).click();
-  await page.getByRole("button", { name: "Add student" }).click();
-  await page.getByTestId("firstName").fill("Automation");
-  await page.getByTestId("lastName").fill("Candidate");
-  await page.getByTestId("email").fill(`candidate-${Date.now()}@example.test`);
-  await page.getByTestId("grade").fill("Grade 8");
-  await page.getByTestId("guardianName").fill("Test Guardian");
-  await page.getByRole("button", { name: "Create student" }).click();
-  await page.locator("#student-search").fill("Automation Candidate");
-  const createdStudent = page.getByTestId("student-row").filter({ hasText: "Automation Candidate" });
-  await expect(createdStudent).toHaveCount(1);
+test("admin creates a student and finds it using search", async ({ loginPage, studentsPage, credentials }) => {
+  await loginPage.signInSuccessfully(credentials.admin.username, credentials.admin.password);
+  await studentsPage.open();
+  await studentsPage.createStudent({
+    firstName: "Automation",
+    lastName: "Candidate",
+    email: `candidate-${Date.now()}@example.test`,
+    grade: "Grade 8",
+    guardianName: "Test Guardian"
+  });
+  await studentsPage.expectStudentVisible("Automation Candidate");
 });
 
-test("viewer sees read-only navigation without write actions", async ({ page }) => {
-  await login(page, "viewer", "Viewer123!");
-  await page.getByRole("button", { name: "Students" }).click();
-  await expect(page.getByRole("button", { name: "Add student" })).toBeHidden();
-  await expect(page.getByTestId("student-row").first()).toBeVisible();
+test("viewer sees read-only navigation without write actions", async ({ loginPage, studentsPage, credentials }) => {
+  await loginPage.signInSuccessfully(credentials.viewer.username, credentials.viewer.password);
+  await studentsPage.open();
+  await expect(studentsPage.addStudent).toBeHidden();
+  await expect(studentsPage.rows.first()).toBeVisible();
 });
 
-test("SDET Lab diagnostics detect a controlled stale-dashboard fault", async ({ page }) => {
-  await login(page);
+test("SDET Lab diagnostics detect a controlled stale-dashboard fault", async ({ page, loginPage, credentials }) => {
+  await loginPage.signInSuccessfully(credentials.admin.username, credentials.admin.password);
   await page.getByRole("button", { name: /SDET Lab/ }).click();
   await page.getByLabel("Simulate stale dashboard total").check();
   await page.getByRole("button", { name: "Apply lab configuration" }).click();
