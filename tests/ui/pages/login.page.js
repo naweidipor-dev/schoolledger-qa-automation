@@ -1,4 +1,4 @@
-import { expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
 export class LoginPage {
   constructor(page) {
@@ -9,17 +9,25 @@ export class LoginPage {
     this.error = page.getByRole("alert");
   }
 
-  async open() { await this.page.goto("/"); }
+  async open() {
+    await test.step("Open the SchoolLedger login page", async () => {
+      await this.page.goto("/");
+    });
+  }
 
   async signIn(username, password) {
-    await this.open();
-    await this.username.fill(username);
-    await this.password.fill(password);
-    await this.submit.click();
+    await test.step(`Sign in as ${username}`, async () => {
+      await this.open();
+      await this.username.fill(username);
+      await this.password.fill(password);
+      await this.submit.click();
+    });
   }
 
   async signInSuccessfully(username, password) {
     await this.signIn(username, password);
-    await expect(this.page.getByRole("heading", { name: "Overview" })).toBeVisible();
+    await test.step("Verify the Overview dashboard is displayed", async () => {
+      await expect(this.page.getByRole("heading", { name: "Overview" })).toBeVisible();
+    });
   }
 }
