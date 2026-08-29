@@ -17,12 +17,13 @@
       <p class="login-copy">A fictional school billing system built for UI, API, data, security, role and CI/CD testing.</p>
       <form id="login-form" novalidate>
         <label>Username<input id="username" name="username" autocomplete="username" required data-testid="username"></label>
-        <label>Password
+        <div class="login-field">
+          <label for="password">Password</label>
           <span class="password-field">
             <input id="password" name="password" type="password" autocomplete="current-password" required data-testid="password">
             <button id="toggle-password" class="password-toggle" type="button" aria-label="Show password" aria-pressed="false" data-testid="toggle-password">Show</button>
           </span>
-        </label>
+        </div>
         <p id="login-error" class="form-error" role="alert"></p>
         <button class="button primary full" type="submit" data-testid="login-submit">Sign in</button>
       </form>
