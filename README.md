@@ -41,6 +41,15 @@ npm run postman
 
 ## Learning assets
 
+### Smoke and regression selection
+
+- `npm run test:ui:smoke`: two login checks in Chromium, selected with `@smoke`; used by Jenkins.
+- `npm run test:ui:regression`: all eight scenarios across Chromium and Firefox, selected with `@regression`; used by GitHub Actions.
+- Smoke tests also carry `@regression`, so the full suite retains them. Add `@regression` to new scenarios to include them in the CI selection.
+- Verified evidence: [Jenkins smoke selection](evidence/framework/Jenkins-Tagged-Smoke.png), [Jenkins build 4 success](evidence/framework/Jenkins-Tagged-Smoke-Success.png), and [GitHub Actions regression success](evidence/framework/Tagged-Regression-CI-Success.png).
+
+### Project references
+
 - `docs/LEARNING_PATH.md` - four-sprint guided programme.
 - `docs/TEST_PLAN.md` - risk-based scope and release criteria.
 - `docs/MANUAL_TEST_CASES.md` - manual and exploratory scenarios.
@@ -68,6 +77,7 @@ npm run postman
 | Reporting | HTML, JUnit XML and JSON reports; trace, screenshot and video on failure | `playwright.config.js` |
 | GitHub Actions | API, Newman and Playwright quality-gate jobs with downloadable artifacts | `.github/workflows/quality-gate.yml` |
 | Jenkins | Windows-compatible pipeline for checkout, install, API and UI smoke stages | `Jenkinsfile` |
+| Suite selection | Tagged Chromium smoke checks and full cross-browser regression, verified in separate CI systems | `package.json`, `tests/ui/`, `evidence/framework/Jenkins-Tagged-Smoke.png` |
 | Evidence management | CI success screens and downloadable report verification | `evidence/ci/`, `evidence/framework/` |
 
 ### Current verified results

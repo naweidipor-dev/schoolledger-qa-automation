@@ -38,6 +38,8 @@ Say that SchoolLedger is a personal fictional training system. Describe what you
 - Reproduce the password-label accessibility failure, explain its root cause, and show the passing CI run after the HTML fix.
 - Demonstrate the GitHub Actions quality gate with three passing jobs.
 - Demonstrate the successful local Jenkins pipeline and explain the Windows `bat` adaptation.
+- Show Jenkins build #4 running two Chromium tests with `--grep @smoke`, and GitHub Actions run #16 passing the tagged regression suite.
+- Explain why login smoke checks provide fast feedback but do not replace student, role, diagnostics and accessibility regression coverage.
 - Open the Newman HTML report and describe the 75 automated assertions.
 - Open the Playwright HTML report and identify the accompanying JUnit XML and JSON outputs.
 - Expand a Playwright test result and explain how named `test.step` actions make failures and timing easier to diagnose.
