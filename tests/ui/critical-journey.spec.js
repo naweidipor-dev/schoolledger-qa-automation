@@ -1,17 +1,17 @@
 import { expect, test } from "./fixtures.js";
 
-test("admin can sign in and view reconciled dashboard metrics", async ({ page, loginPage, credentials }) => {
+test("admin can sign in and view reconciled dashboard metrics", { tag: ["@smoke", "@regression"] }, async ({ page, loginPage, credentials }) => {
   await loginPage.signInSuccessfully(credentials.admin.username, credentials.admin.password);
   await expect(page.locator("#metrics .metric-card")).toHaveCount(5);
   await expect(page.getByText("Ready for testing")).toBeVisible();
 });
 
-test("invalid login shows a useful error", async ({ loginPage, credentials }) => {
+test("invalid login shows a useful error", { tag: ["@smoke", "@regression"] }, async ({ loginPage, credentials }) => {
   await loginPage.signIn(credentials.admin.username, "wrong-password");
   await expect(loginPage.error).toContainText("incorrect");
 });
 
-test("admin creates a student and finds it using search", async ({ loginPage, studentsPage, credentials }) => {
+test("admin creates a student and finds it using search", { tag: "@regression" }, async ({ loginPage, studentsPage, credentials }) => {
   await loginPage.signInSuccessfully(credentials.admin.username, credentials.admin.password);
   await studentsPage.open();
   await studentsPage.createStudent({
@@ -24,7 +24,7 @@ test("admin creates a student and finds it using search", async ({ loginPage, st
   await studentsPage.expectStudentVisible("Automation Candidate");
 });
 
-test("admin seeds a student through the API and verifies it in the UI", async ({ api, loginPage, studentsPage, credentials }) => {
+test("admin seeds a student through the API and verifies it in the UI", { tag: "@regression" }, async ({ api, loginPage, studentsPage, credentials }) => {
   const student = {
     firstName: "Hybrid",
     lastName: "Learner",
@@ -40,14 +40,14 @@ test("admin seeds a student through the API and verifies it in the UI", async ({
   await studentsPage.expectStudentVisible(`${student.firstName} ${student.lastName}`);
 });
 
-test("viewer sees read-only navigation without write actions", async ({ loginPage, studentsPage, credentials }) => {
+test("viewer sees read-only navigation without write actions", { tag: "@regression" }, async ({ loginPage, studentsPage, credentials }) => {
   await loginPage.signInSuccessfully(credentials.viewer.username, credentials.viewer.password);
   await studentsPage.open();
   await expect(studentsPage.addStudent).toBeHidden();
   await expect(studentsPage.rows.first()).toBeVisible();
 });
 
-test("SDET Lab diagnostics detect a controlled stale-dashboard fault", async ({ page, loginPage, credentials }) => {
+test("SDET Lab diagnostics detect a controlled stale-dashboard fault", { tag: "@regression" }, async ({ page, loginPage, credentials }) => {
   await loginPage.signInSuccessfully(credentials.admin.username, credentials.admin.password);
   await page.getByRole("button", { name: /SDET Lab/ }).click();
   await page.getByLabel("Simulate stale dashboard total").check();

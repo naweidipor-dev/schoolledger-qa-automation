@@ -9,6 +9,8 @@
     "dev": "node --watch src/server.mjs",
     "test": "node --test tests/api/*.test.mjs",
     "test:ui": "playwright test",
+    "test:ui:smoke": "playwright test --project=chromium --grep @smoke",
+    "test:ui:regression": "playwright test --grep @regression",
     "test:ui:headed": "playwright test --headed",
     "test:cypress": "cypress run",
     "postman": "newman run postman/SchoolLedger-Automated-Regression.postman_collection.json -e postman/QA-Practice.postman_environment.json --folder \"SchoolLedger Automated Regression\"",

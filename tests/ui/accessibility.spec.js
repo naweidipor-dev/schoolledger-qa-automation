@@ -1,6 +1,6 @@
 import { expect, test } from "./fixtures.js";
 
-test("login page exposes accessible names and status messaging", async ({ page }) => {
+test("login page exposes accessible names and status messaging", { tag: "@regression" }, async ({ page }) => {
   await test.step("Open the login page", async () => {
     await page.goto("/");
   });
@@ -16,7 +16,7 @@ test("login page exposes accessible names and status messaging", async ({ page }
   });
 });
 
-test("login controls support keyboard navigation and password disclosure", async ({ page }) => {
+test("login controls support keyboard navigation and password disclosure", { tag: "@regression" }, async ({ page }) => {
   await page.goto("/");
   const username = page.getByLabel("Username");
   const password = page.getByLabel("Password", { exact: true });
