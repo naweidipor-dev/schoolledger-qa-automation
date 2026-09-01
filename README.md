@@ -44,7 +44,7 @@ npm run postman
 ### Smoke and regression selection
 
 - `npm run test:ui:smoke`: two login checks in Chromium, selected with `@smoke`; used by Jenkins.
-- `npm run test:ui:regression`: all eight scenarios across Chromium and Firefox, selected with `@regression`; used by GitHub Actions.
+- `npm run test:ui:regression`: all ten scenarios across Chromium and Firefox (20 executions), selected with `@regression`; used by GitHub Actions.
 - Smoke tests also carry `@regression`, so the full suite retains them. Add `@regression` to new scenarios to include them in the CI selection.
 - Verified evidence: [Jenkins smoke selection](evidence/framework/Jenkins-Tagged-Smoke.png), [Jenkins build 4 success](evidence/framework/Jenkins-Tagged-Smoke-Success.png), and [GitHub Actions regression success](evidence/framework/Tagged-Regression-CI-Success.png).
 
@@ -74,10 +74,12 @@ npm run postman
 | Accessibility testing | Accessible-name, ARIA state and keyboard-navigation checks that detected and verified a password-label defect | `tests/ui/accessibility.spec.js` |
 | Test reporting clarity | Named `test.step` actions expose business intent and timing in HTML reports | `evidence/framework/Playwright-Test-Steps-Verified.png` |
 | Test reliability | Isolated reset fixture, unique test data and web-first assertions | `tests/ui/` |
+| Resilience testing | Mocked JSON 503 and non-JSON 502 login failures with successful same-page retry against the real API | `tests/ui/network-error-handling.spec.js` |
 | Reporting | HTML, JUnit XML and JSON reports; trace, screenshot and video on failure | `playwright.config.js` |
 | GitHub Actions | API, Newman and Playwright quality-gate jobs with downloadable artifacts | `.github/workflows/quality-gate.yml` |
 | Jenkins | Windows-compatible pipeline for checkout, install, API and UI smoke stages | `Jenkinsfile` |
 | Suite selection | Tagged Chromium smoke checks and full cross-browser regression, verified in separate CI systems | `package.json`, `tests/ui/`, `evidence/framework/Jenkins-Tagged-Smoke.png` |
+| Git collaboration | Feature branch, reviewed pull request, six passing checks, conflict-free merge and local fast-forward sync | `evidence/workflow/` |
 | Evidence management | CI success screens and downloadable report verification | `evidence/ci/`, `evidence/framework/` |
 
 ### Current verified results
@@ -89,6 +91,8 @@ npm run postman
 - Playwright framework: reusable login/student Page Objects and automatic test-data reset fixture.
 - Hybrid automation: API-created test data verified through the browser UI.
 - Accessibility automation: semantic labels, ARIA state and keyboard interaction verified after detecting and fixing a real defect.
+- Resilience automation: four targeted cross-browser checks and 20 full regression executions passed locally.
+- Pull request #1: API, Newman and UI checks passed for both push and pull-request events before merge.
 - Playwright reporting: named business-action steps verified in the HTML report.
 - CI reports: HTML, JUnit XML and JSON artifacts retained for 14 days.
 
@@ -105,5 +109,9 @@ After you have personally run, changed and explained the tests, you may say:
 > Built a reusable Playwright API client and combined fast API test-data setup with cross-browser UI verification.
 
 > Added Playwright accessibility checks that exposed an incorrect password-label association, fixed the markup, and verified the repair in CI.
+
+> Tested login recovery from structured HTTP 503 and non-JSON HTTP 502 failures, then verified successful retry without a page refresh across Chromium and Firefox.
+
+> Delivered the change through a feature branch and reviewed pull request with six passing CI checks before merging to `main`.
 
 Do not claim that it was production work or a confidential employer system.
