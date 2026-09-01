@@ -72,6 +72,7 @@ npm run postman
 | Playwright | Cross-browser critical journeys using fixtures and Page Objects | `tests/ui/fixtures.js`, `tests/ui/pages/` |
 | Hybrid API/UI testing | Reusable API client for authentication, data reset and API-seeded UI verification | `tests/ui/api/school-ledger.api.js` |
 | Accessibility testing | Accessible-name, ARIA state and keyboard-navigation checks that detected and verified a password-label defect | `tests/ui/accessibility.spec.js` |
+| Mobile testing | Dedicated Pixel 5 project covering viewport overflow, collapsed navigation and mobile Students access | `tests/ui/mobile-responsive.spec.js` |
 | Test reporting clarity | Named `test.step` actions expose business intent and timing in HTML reports | `evidence/framework/Playwright-Test-Steps-Verified.png` |
 | Test reliability | Isolated reset fixture, unique test data and web-first assertions | `tests/ui/` |
 | Resilience testing | Mocked JSON 503 and non-JSON 502 login failures with successful same-page retry against the real API | `tests/ui/network-error-handling.spec.js` |
@@ -91,6 +92,7 @@ npm run postman
 - Playwright framework: reusable login/student Page Objects and automatic test-data reset fixture.
 - Hybrid automation: API-created test data verified through the browser UI.
 - Accessibility automation: semantic labels, ARIA state and keyboard interaction verified after detecting and fixing a real defect.
+- Mobile automation: two Pixel 5 scenarios passed; the combined tagged regression completed 22 executions with no failures.
 - Resilience automation: four targeted cross-browser checks and 20 full regression executions passed locally.
 - Pull request #1: API, Newman and UI checks passed for both push and pull-request events before merge.
 - Playwright reporting: named business-action steps verified in the HTML report.
@@ -113,5 +115,7 @@ After you have personally run, changed and explained the tests, you may say:
 > Tested login recovery from structured HTTP 503 and non-JSON HTTP 502 failures, then verified successful retry without a page refresh across Chromium and Firefox.
 
 > Delivered the change through a feature branch and reviewed pull request with six passing CI checks before merging to `main`.
+
+> Added a dedicated Playwright mobile project that verifies responsive login layout and authenticated navigation on a Pixel 5 profile without duplicating the desktop suite.
 
 Do not claim that it was production work or a confidential employer system.

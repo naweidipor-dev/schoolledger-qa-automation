@@ -46,3 +46,5 @@ Say that SchoolLedger is a personal fictional training system. Describe what you
 - Explain how screenshots, video and traces are retained when a Playwright test fails.
 - Show the targeted resilience run (4 passed) and full tagged regression run (20 passed), then explain why only one browser request is mocked.
 - Walk through pull request #1: feature branch, diff review, six passing checks, no conflicts, merge, and local `git pull --ff-only`.
+- Show the Pixel 5 project configuration and explain how `testMatch`/`testIgnore` keep mobile-only checks separate from desktop coverage.
+- Demonstrate the 2-test mobile run, the complete 22-execution regression, and pull request #3 with six passing checks.
