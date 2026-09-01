@@ -77,7 +77,8 @@ npm run postman
 | Test reliability | Isolated reset fixture, unique test data and web-first assertions | `tests/ui/` |
 | Resilience testing | Mocked JSON 503 and non-JSON 502 login failures with successful same-page retry against the real API | `tests/ui/network-error-handling.spec.js` |
 | Reporting | HTML, JUnit XML and JSON reports; trace, screenshot and video on failure | `playwright.config.js` |
-| GitHub Actions | API, Newman and Playwright quality-gate jobs with downloadable artifacts | `.github/workflows/quality-gate.yml` |
+| GitHub Actions | API and Newman gates plus parallel Chromium, Firefox and Pixel 5 Playwright jobs with isolated artifacts | `.github/workflows/quality-gate.yml` |
+| CI matrix design | Three independent Playwright projects, selective browser installation, `fail-fast: false` and reproducible `npm ci` installs | `evidence/ci-matrix/` |
 | Jenkins | Windows-compatible pipeline for checkout, install, API and UI smoke stages | `Jenkinsfile` |
 | Suite selection | Tagged Chromium smoke checks and full cross-browser regression, verified in separate CI systems | `package.json`, `tests/ui/`, `evidence/framework/Jenkins-Tagged-Smoke.png` |
 | Git collaboration | Feature branch, reviewed pull request, six passing checks, conflict-free merge and local fast-forward sync | `evidence/workflow/` |
@@ -88,6 +89,7 @@ npm run postman
 - Postman runner: 75 passed, 0 failed.
 - Newman CLI regression: 18 requests and 75 assertions, 0 failures.
 - GitHub Actions: API, Postman/Newman and Playwright jobs passed.
+- Parallel CI matrix: Chromium, Firefox and mobile Chromium reported independently; pull request #5 completed 10 checks successfully.
 - Jenkins: pipeline completed with `Finished: SUCCESS`.
 - Playwright framework: reusable login/student Page Objects and automatic test-data reset fixture.
 - Hybrid automation: API-created test data verified through the browser UI.
@@ -117,5 +119,7 @@ After you have personally run, changed and explained the tests, you may say:
 > Delivered the change through a feature branch and reviewed pull request with six passing CI checks before merging to `main`.
 
 > Added a dedicated Playwright mobile project that verifies responsive login layout and authenticated navigation on a Pixel 5 profile without duplicating the desktop suite.
+
+> Parallelized Playwright in GitHub Actions across Chromium, Firefox and Pixel 5 projects, with reproducible installs and separate diagnostic artifacts for each matrix entry.
 
 Do not claim that it was production work or a confidential employer system.
