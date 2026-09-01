@@ -13,7 +13,7 @@ async function request(path, { token, method = "GET", body } = {}) {
     headers: { ...(token && { Authorization: `Bearer ${token}` }), ...(body && { "Content-Type": "application/json" }) },
     body: body ? JSON.stringify(body) : undefined
   });
-  return { status: response.status, body: await response.json() };
+  return { status: response.status, headers: response.headers, body: await response.json() };
 }
 
 async function login(username, password) {
@@ -39,6 +39,36 @@ describe("SchoolLedger REST API", { concurrency: 1 }, () => {
     const result = await request("/api/health");
     assert.equal(result.status, 200);
     assert.equal(result.body.status, "ok");
+  });
+
+  test("API success and error responses include security headers", async () => {
+    const expectedHeaders = {
+      "permissions-policy": "camera=(), microphone=(), geolocation=()",
+      "referrer-policy": "no-referrer",
+      "x-content-type-options": "nosniff",
+      "x-frame-options": "DENY"
+    };
+
+    for (const path of ["/api/health", "/api/route-that-does-not-exist"]) {
+      const result = await request(path);
+      for (const [name, value] of Object.entries(expectedHeaders)) {
+        assert.equal(result.headers.get(name), value, `${path} must return ${name}`);
+      }
+      assert.match(result.headers.get("content-security-policy"), /frame-ancestors 'none'/);
+    }
+  });
+
+  test("HTML responses include browser security headers", async () => {
+    const response = await fetch(baseUrl);
+    assert.equal(response.status, 200);
+    assert.equal(response.headers.get("x-content-type-options"), "nosniff");
+    assert.equal(response.headers.get("x-frame-options"), "DENY");
+    assert.equal(response.headers.get("referrer-policy"), "no-referrer");
+    assert.equal(response.headers.get("permissions-policy"), "camera=(), microphone=(), geolocation=()");
+    assert.equal(
+      response.headers.get("content-security-policy"),
+      "default-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+    );
   });
 
   test("invalid credentials return a consistent error contract", async () => {
