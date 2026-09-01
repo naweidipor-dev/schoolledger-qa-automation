@@ -8,10 +8,21 @@ import { fieldErrors, moneyToCents, requiredText, validDate, validEmail } from "
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const publicDir = path.join(rootDir, "public");
 const mimeTypes = { ".html": "text/html; charset=utf-8", ".css": "text/css; charset=utf-8", ".js": "text/javascript; charset=utf-8", ".svg": "image/svg+xml" };
+const securityHeaders = {
+  "Content-Security-Policy": "default-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'",
+  "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
+  "Referrer-Policy": "no-referrer",
+  "X-Content-Type-Options": "nosniff",
+  "X-Frame-Options": "DENY"
+};
+
+function responseHeaders(headers = {}) {
+  return { ...securityHeaders, ...headers };
+}
 
 function send(response, status, body, headers = {}) {
   const payload = body === undefined ? "" : JSON.stringify(body);
-  response.writeHead(status, { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store", ...headers });
+  response.writeHead(status, responseHeaders({ "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store", ...headers }));
   response.end(payload);
 }
 
@@ -275,7 +286,7 @@ async function staticFile(request, response, url) {
     const fileStat = await stat(resolved);
     if (!fileStat.isFile()) return false;
     const content = await readFile(resolved);
-    response.writeHead(200, { "Content-Type": mimeTypes[path.extname(resolved)] ?? "application/octet-stream", "Cache-Control": "no-cache" });
+    response.writeHead(200, responseHeaders({ "Content-Type": mimeTypes[path.extname(resolved)] ?? "application/octet-stream", "Cache-Control": "no-cache" }));
     response.end(content);
     return true;
   } catch { return false; }
@@ -289,7 +300,7 @@ export async function createServer({ reset = false } = {}) {
       if (url.pathname.startsWith("/api/")) await api(request, response, store, url);
       else if (!(await staticFile(request, response, url))) {
         const index = await readFile(path.join(publicDir, "index.html"));
-        response.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+        response.writeHead(200, responseHeaders({ "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-cache" }));
         response.end(index);
       }
     } catch (error) {
