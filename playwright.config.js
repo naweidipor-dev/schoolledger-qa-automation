@@ -12,8 +12,9 @@ export default defineConfig({
   ],
   use: { baseURL: "http://127.0.0.1:4173", trace: "retain-on-failure", screenshot: "only-on-failure", video: "retain-on-failure" },
   projects: [
-    { name: "chromium", use: { ...devices["Desktop Chrome"] } },
-    { name: "firefox", use: { ...devices["Desktop Firefox"] } }
+    { name: "chromium", testIgnore: /mobile-responsive\.spec\.js/, use: { ...devices["Desktop Chrome"] } },
+    { name: "firefox", testIgnore: /mobile-responsive\.spec\.js/, use: { ...devices["Desktop Firefox"] } },
+    { name: "mobile-chromium", testMatch: /mobile-responsive\.spec\.js/, use: { ...devices["Pixel 5"] } }
   ],
   webServer: { command: "node src/server.mjs", url: "http://127.0.0.1:4173/api/health", reuseExistingServer: !process.env.CI }
 });
