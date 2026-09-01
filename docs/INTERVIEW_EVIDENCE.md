@@ -52,3 +52,5 @@ Say that SchoolLedger is a personal fictional training system. Describe what you
 - Show pull request #5 completing 10 checks after the matrix change and explain the benefit of `npm ci` with a committed lockfile.
 - Compare pull requests #5 and #7: explain why checks dropped from 10 to the intended 5 after eliminating duplicate push and pull-request workflows.
 - Explain how concurrency cancellation, npm caching and read-only permissions improve CI cost, speed and security.
+- Show the security-header tests for API success, API error and HTML responses; explain how CSP, `X-Frame-Options`, `X-Content-Type-Options`, Referrer Policy and Permissions Policy reduce browser attack surface.
+- Show the security-header pull request completing five checks, and explain why the complete UI suite was used to detect CSP compatibility regressions.
