@@ -50,3 +50,5 @@ Say that SchoolLedger is a personal fictional training system. Describe what you
 - Demonstrate the 2-test mobile run, the complete 22-execution regression, and pull request #3 with six passing checks.
 - Explain how the GitHub Actions matrix separates Chromium, Firefox and mobile Chromium, why `fail-fast` is disabled, and why artifacts need unique names.
 - Show pull request #5 completing 10 checks after the matrix change and explain the benefit of `npm ci` with a committed lockfile.
+- Compare pull requests #5 and #7: explain why checks dropped from 10 to the intended 5 after eliminating duplicate push and pull-request workflows.
+- Explain how concurrency cancellation, npm caching and read-only permissions improve CI cost, speed and security.

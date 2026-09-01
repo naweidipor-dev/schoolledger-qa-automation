@@ -79,6 +79,7 @@ npm run postman
 | Reporting | HTML, JUnit XML and JSON reports; trace, screenshot and video on failure | `playwright.config.js` |
 | GitHub Actions | API and Newman gates plus parallel Chromium, Firefox and Pixel 5 Playwright jobs with isolated artifacts | `.github/workflows/quality-gate.yml` |
 | CI matrix design | Three independent Playwright projects, selective browser installation, `fail-fast: false` and reproducible `npm ci` installs | `evidence/ci-matrix/` |
+| CI efficiency and security | Branch-scoped triggers, superseded-run cancellation, npm caching and read-only workflow permissions | `evidence/ci-efficiency/` |
 | Jenkins | Windows-compatible pipeline for checkout, install, API and UI smoke stages | `Jenkinsfile` |
 | Suite selection | Tagged Chromium smoke checks and full cross-browser regression, verified in separate CI systems | `package.json`, `tests/ui/`, `evidence/framework/Jenkins-Tagged-Smoke.png` |
 | Git collaboration | Feature branch, reviewed pull request, six passing checks, conflict-free merge and local fast-forward sync | `evidence/workflow/` |
@@ -90,6 +91,7 @@ npm run postman
 - Newman CLI regression: 18 requests and 75 assertions, 0 failures.
 - GitHub Actions: API, Postman/Newman and Playwright jobs passed.
 - Parallel CI matrix: Chromium, Firefox and mobile Chromium reported independently; pull request #5 completed 10 checks successfully.
+- CI optimization: duplicate feature-branch push checks were removed; pull request #7 completed the expected five checks successfully.
 - Jenkins: pipeline completed with `Finished: SUCCESS`.
 - Playwright framework: reusable login/student Page Objects and automatic test-data reset fixture.
 - Hybrid automation: API-created test data verified through the browser UI.
@@ -121,5 +123,7 @@ After you have personally run, changed and explained the tests, you may say:
 > Added a dedicated Playwright mobile project that verifies responsive login layout and authenticated navigation on a Pixel 5 profile without duplicating the desktop suite.
 
 > Parallelized Playwright in GitHub Actions across Chromium, Firefox and Pixel 5 projects, with reproducible installs and separate diagnostic artifacts for each matrix entry.
+
+> Reduced CI duplication and resource usage with branch-scoped triggers, concurrency cancellation and npm caching, while restricting workflow permissions to read-only repository access.
 
 Do not claim that it was production work or a confidential employer system.
