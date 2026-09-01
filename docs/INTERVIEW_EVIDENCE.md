@@ -48,3 +48,5 @@ Say that SchoolLedger is a personal fictional training system. Describe what you
 - Walk through pull request #1: feature branch, diff review, six passing checks, no conflicts, merge, and local `git pull --ff-only`.
 - Show the Pixel 5 project configuration and explain how `testMatch`/`testIgnore` keep mobile-only checks separate from desktop coverage.
 - Demonstrate the 2-test mobile run, the complete 22-execution regression, and pull request #3 with six passing checks.
+- Explain how the GitHub Actions matrix separates Chromium, Firefox and mobile Chromium, why `fail-fast` is disabled, and why artifacts need unique names.
+- Show pull request #5 completing 10 checks after the matrix change and explain the benefit of `npm ci` with a committed lockfile.
