@@ -44,3 +44,5 @@ Say that SchoolLedger is a personal fictional training system. Describe what you
 - Open the Playwright HTML report and identify the accompanying JUnit XML and JSON outputs.
 - Expand a Playwright test result and explain how named `test.step` actions make failures and timing easier to diagnose.
 - Explain how screenshots, video and traces are retained when a Playwright test fails.
+- Show the targeted resilience run (4 passed) and full tagged regression run (20 passed), then explain why only one browser request is mocked.
+- Walk through pull request #1: feature branch, diff review, six passing checks, no conflicts, merge, and local `git pull --ff-only`.
