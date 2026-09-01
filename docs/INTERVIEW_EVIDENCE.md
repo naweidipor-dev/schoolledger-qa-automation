@@ -54,3 +54,5 @@ Say that SchoolLedger is a personal fictional training system. Describe what you
 - Explain how concurrency cancellation, npm caching and read-only permissions improve CI cost, speed and security.
 - Show the security-header tests for API success, API error and HTML responses; explain how CSP, `X-Frame-Options`, `X-Content-Type-Options`, Referrer Policy and Permissions Policy reduce browser attack surface.
 - Show the security-header pull request completing five checks, and explain why the complete UI suite was used to detect CSP compatibility regressions.
+- Run the API performance smoke and interpret its average, p95 and maximum latency metrics for the public health and authenticated dashboard endpoints.
+- Explain why warm-up requests, multiple samples, percentile-based thresholds and a configurable CI budget are more reliable than asserting one request duration.
