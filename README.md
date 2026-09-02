@@ -82,6 +82,7 @@ npm run postman
 | CI efficiency and security | Branch-scoped triggers, superseded-run cancellation, npm caching and read-only workflow permissions | `evidence/ci-efficiency/` |
 | HTTP security headers | CSP, Permissions Policy, Referrer Policy, MIME-sniffing prevention and clickjacking protection verified on API success, API error and HTML responses | `src/server.mjs`, `tests/api/school-ledger.test.mjs`, `evidence/security/` |
 | API performance smoke | Warmed, repeat-sampled health and authenticated-dashboard checks with average, p95 and maximum latency reporting plus a configurable CI budget | `tests/performance/api-performance.test.mjs`, `evidence/performance/` |
+| Financial workflow automation | End-to-end student, invoice and full-payment journey with paid-state, payment-history and API-to-UI dashboard reconciliation | `tests/ui/critical-journey.spec.js`, `tests/ui/pages/finance.page.js`, `evidence/finance-journey/` |
 | Jenkins | Windows-compatible pipeline for checkout, install, API and UI smoke stages | `Jenkinsfile` |
 | Suite selection | Tagged Chromium smoke checks and full cross-browser regression, verified in separate CI systems | `package.json`, `tests/ui/`, `evidence/framework/Jenkins-Tagged-Smoke.png` |
 | Git collaboration | Feature branch, reviewed pull request, six passing checks, conflict-free merge and local fast-forward sync | `evidence/workflow/` |
