@@ -40,6 +40,43 @@ test("admin seeds a student through the API and verifies it in the UI", { tag: "
   await studentsPage.expectStudentVisible(`${student.firstName} ${student.lastName}`);
 });
 
+test("admin completes an invoice payment and reconciles the dashboard", { tag: "@regression" }, async ({ api, financePage, loginPage, studentsPage, credentials }) => {
+  const uniqueId = Date.now();
+  const student = {
+    firstName: "Finance",
+    lastName: `Journey${uniqueId}`,
+    email: `finance-${uniqueId}@example.test`,
+    grade: "Grade 10",
+    guardianName: "Reconciliation Guardian"
+  };
+  const description = `Automation tuition ${uniqueId}`;
+  const reference = `E2E-${uniqueId}`;
+
+  await loginPage.signInSuccessfully(credentials.admin.username, credentials.admin.password);
+  await studentsPage.open();
+  await studentsPage.createStudent(student);
+  await studentsPage.expectStudentVisible(`${student.firstName} ${student.lastName}`);
+
+  await financePage.openInvoices();
+  await financePage.createInvoice({
+    studentOption: `${student.firstName} ${student.lastName} · ${student.grade}`,
+    description,
+    amount: "125.00",
+    dueDate: "2026-12-31"
+  });
+  await financePage.recordPaymentFromInvoice({
+    description,
+    amount: "125.00",
+    method: "bank_transfer",
+    reference
+  });
+  await financePage.expectInvoicePaid(description);
+  await financePage.expectPaymentVisible(reference, "£125.00");
+
+  const { metrics } = await api.getDashboard(credentials.admin);
+  await financePage.expectDashboardMetrics(metrics, reference);
+});
+
 test("viewer sees read-only navigation without write actions", { tag: "@regression" }, async ({ loginPage, studentsPage, credentials }) => {
   await loginPage.signInSuccessfully(credentials.viewer.username, credentials.viewer.password);
   await studentsPage.open();

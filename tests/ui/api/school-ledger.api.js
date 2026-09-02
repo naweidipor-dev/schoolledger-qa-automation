@@ -35,4 +35,15 @@ export class SchoolLedgerApi {
       return response.json();
     });
   }
+
+  async getDashboard(credentials) {
+    return test.step("Read reconciled dashboard totals through the API", async () => {
+      const token = await this.authenticate(credentials);
+      const response = await this.request.get("/api/dashboard", {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      expect(response.ok()).toBeTruthy();
+      return response.json();
+    });
+  }
 }
