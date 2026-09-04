@@ -23,6 +23,7 @@ CREATE TABLE payments (
   amount_cents INTEGER NOT NULL CHECK (amount_cents > 0),
   method VARCHAR(20) NOT NULL,
   reference VARCHAR(60) NOT NULL UNIQUE,
+  status VARCHAR(12) NOT NULL CHECK (status IN ('completed','refunded')),
   created_at TIMESTAMP NOT NULL
 );
 CREATE TABLE refunds (
