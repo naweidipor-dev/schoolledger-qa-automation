@@ -58,3 +58,5 @@ Say that SchoolLedger is a personal fictional training system. Describe what you
 - Explain why warm-up requests, multiple samples, percentile-based thresholds and a configurable CI budget are more reliable than asserting one request duration.
 - Demonstrate the student-to-invoice-to-payment journey and explain how the Finance Page Object keeps workflow behavior separate from test intent.
 - Show how the test verifies paid status, zero outstanding balance, payment history and API-to-UI dashboard reconciliation, then show pull request #13 passing all five CI checks.
+- Run the SQLite data-integrity suite and explain the zero-row/zero-violation testing pattern for orphan relationships, invalid balances and duplicate references.
+- Explain how pre-aggregating payments and refunds prevents join multiplication during reconciliation, then demonstrate that deliberate corruptions are detected and show pull request #15 passing all five CI checks.
