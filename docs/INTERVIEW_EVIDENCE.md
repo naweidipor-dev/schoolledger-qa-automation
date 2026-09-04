@@ -56,3 +56,5 @@ Say that SchoolLedger is a personal fictional training system. Describe what you
 - Show the security-header pull request completing five checks, and explain why the complete UI suite was used to detect CSP compatibility regressions.
 - Run the API performance smoke and interpret its average, p95 and maximum latency metrics for the public health and authenticated dashboard endpoints.
 - Explain why warm-up requests, multiple samples, percentile-based thresholds and a configurable CI budget are more reliable than asserting one request duration.
+- Demonstrate the student-to-invoice-to-payment journey and explain how the Finance Page Object keeps workflow behavior separate from test intent.
+- Show how the test verifies paid status, zero outstanding balance, payment history and API-to-UI dashboard reconciliation, then show pull request #13 passing all five CI checks.
