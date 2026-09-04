@@ -9,6 +9,7 @@
     "dev": "node --watch src/server.mjs",
     "test": "node --test tests/api/*.test.mjs",
     "test:performance": "node --test tests/performance/*.test.mjs",
+    "test:data": "python -m unittest discover -s tests/data -p \"test_*.py\" -v",
     "test:ui": "playwright test",
     "test:ui:smoke": "playwright test --project=chromium --grep @smoke",
     "test:ui:regression": "playwright test --grep @regression",
